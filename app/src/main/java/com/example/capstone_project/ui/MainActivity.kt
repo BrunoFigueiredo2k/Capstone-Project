@@ -6,7 +6,12 @@ import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import androidx.viewpager.widget.ViewPager
 import com.example.capstone_project.R
+import com.example.capstone_project.ui.adapters.ViewPagerAdapter
+import com.example.capstone_project.ui.fragments.DownloadsFragment
+import com.example.capstone_project.ui.fragments.MoviesFragment
+import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -15,10 +20,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
 
-        findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
+        // Set up top tabs
+        setUpTabs()
+    }
+
+    // Function that calls methods from ViewPagerAdapter to set up the tabs for 'Movies' and 'Downloads'
+    private fun setUpTabs(){
+        val adapter = ViewPagerAdapter(supportFragmentManager)
+        adapter.addFragment(MoviesFragment(), "Movies")
+        adapter.addFragment(DownloadsFragment(), "Downloads")
+
+        viewPager.adapter = adapter
+        tabs.setupWithViewPager(viewPager)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
