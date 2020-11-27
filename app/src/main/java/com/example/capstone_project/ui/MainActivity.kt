@@ -1,8 +1,6 @@
 package com.example.capstone_project.ui
 
 import android.os.Bundle
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.widget.AdapterView
@@ -14,9 +12,7 @@ import com.example.capstone_project.ui.fragments.DownloadsFragment
 import com.example.capstone_project.ui.fragments.MoviesFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
-import android.app.SearchManager;
 import android.widget.SearchView;
-import android.widget.SearchView.OnQueryTextListener;
 import android.widget.Toast.LENGTH_LONG
 
 class MainActivity : AppCompatActivity() {
@@ -29,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
 
         // Adapter for search function
-        adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, resources.getStringArray(R.array.countries_array))
+        adapter = ArrayAdapter(this, R.layout.item_movie, resources.getStringArray(R.array.countries_array))
         lv_listView.adapter = adapter
         lv_listView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
             // TODO: change this click listener to opening subtitles list fragment

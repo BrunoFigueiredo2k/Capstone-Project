@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.capstone_project.R
-import com.example.capstone_project.data.Movie
+import com.example.capstone_project.model.Movie
 import kotlinx.android.synthetic.main.item_movie.view.*
 
 class MovieAdapter(private val movies: List<Movie>) : RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
@@ -35,7 +35,7 @@ class MovieAdapter(private val movies: List<Movie>) : RecyclerView.Adapter<Movie
         fun databind(movie: Movie) {
             itemView.tvMovieTitle.text = movie.title
             itemView.tvMovieReleaseYear.text = movie.releaseYear.toString()
-            itemView.tvMovieGenre.text = movie.genre
+//            itemView.tvMovieGenre.text = movie.genre
             itemView.tvMovieRating.text = movie.rating.toString()
             itemView.ivMoviePoster.setImageResource(movie.posterImg)
         }
