@@ -7,9 +7,6 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.example.capstone_project.R
-import com.example.capstone_project.ui.adapters.ViewPagerAdapter
-import com.example.capstone_project.ui.fragments.DownloadsFragment
-import com.example.capstone_project.ui.fragments.MoviesFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import android.widget.SearchView;
@@ -39,7 +36,9 @@ class MainActivity : AppCompatActivity() {
 
     // Function that calls methods from ViewPagerAdapter to set up the tabs for 'Movies' and 'Downloads'
     private fun setUpTabs(){
-        val adapter = ViewPagerAdapter(supportFragmentManager)
+        val adapter = ViewPagerAdapter(
+            supportFragmentManager
+        )
         adapter.addFragment(MoviesFragment(), "Movies")
         adapter.addFragment(DownloadsFragment(), "Downloads")
 

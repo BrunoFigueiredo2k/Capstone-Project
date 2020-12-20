@@ -4,30 +4,27 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.capstone_project.interfaces.MovieApiService
-import com.example.capstone_project.model.Download
 import com.example.capstone_project.model.Movie
 import com.example.capstone_project.model.ResultSetWithMovies
 import com.example.capstone_project.ui.api.MovieApi
 import kotlinx.coroutines.withTimeout
 
-
 class MovieRepository {
     private val movieApiService: MovieApiService = MovieApi.createApi()
 
-    private val _movies: MutableLiveData<ArrayList<Download>> = MutableLiveData()
+    private val _movies: MutableLiveData<ArrayList<Movie>> = MutableLiveData()
 
-    val movie: LiveData<ArrayList<Download>>
-        get() = _downloads
+    val movie: LiveData<ArrayList<Movie>>
+    get() = _movies
 
-    suspend fun getMovieItem()  {
+    suspend fun getMovieItem(title : String)  {
         try {
             //timeout the request after 5 seconds
-            // TODO: fix type here
             val result : ResultSetWithMovies = withTimeout(5_000) {
-                movieApiService.fetchAllMovies()
+                movieApiService.fetchAllMovies(title)
             }
 
-            _downloads.value = result.movies
+            _movies.value = result.movies
             Log.d("movies", result.toString())
         } catch (error: Throwable) {
             throw MovieRefreshError("Unable to refresh movies", error)

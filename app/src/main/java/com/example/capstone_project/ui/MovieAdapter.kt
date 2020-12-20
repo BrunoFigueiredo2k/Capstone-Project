@@ -1,4 +1,4 @@
-package com.example.capstone_project.ui.adapters
+package com.example.capstone_project.ui
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater

@@ -1,4 +1,4 @@
-package com.example.capstone_project.ui.fragments
+package com.example.capstone_project.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,13 +8,13 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.capstone_project.R
 import com.example.capstone_project.model.Movie
-import com.example.capstone_project.ui.adapters.MovieAdapter
 import kotlinx.android.synthetic.main.fragment_movies.*
 
 
 class MoviesFragment : Fragment() {
     private val movies = arrayListOf<Movie>()
-    private val gameAdapter = MovieAdapter(movies)
+    private val gameAdapter =
+        MovieAdapter(movies)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +43,8 @@ class MoviesFragment : Fragment() {
 //        rvMovies.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
 
         val exampleList = generateDummyList(500)
-        rvMovies.adapter = MovieAdapter(exampleList)
+        rvMovies.adapter =
+            MovieAdapter(exampleList)
         rvMovies.layoutManager = LinearLayoutManager(context)
         rvMovies.setHasFixedSize(true)
     }
