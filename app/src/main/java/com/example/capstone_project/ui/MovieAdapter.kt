@@ -24,7 +24,7 @@ class MovieAdapter(private val movies: List<Movie>, private val onClick: (Movie)
 
     override fun getItemCount(): Int = movies.size
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.databind(movies[position], position)
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.databind(movies[position])
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         init {
