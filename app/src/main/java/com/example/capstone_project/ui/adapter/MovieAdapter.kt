@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.capstone_project.R
+import com.example.capstone_project.model.Download
 import com.example.capstone_project.model.Movie
 import kotlinx.android.synthetic.main.item_movie.view.*
 

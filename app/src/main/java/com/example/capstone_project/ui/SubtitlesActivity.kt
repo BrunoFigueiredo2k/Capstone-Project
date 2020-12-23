@@ -17,11 +17,11 @@ class SubtitlesActivity : AppCompatActivity(){
         val movie = intent.getParcelableExtra<Movie>("movie")
 
         // Set images using glide and text of specific movie
-        Glide.with(this).load(imageUrl + movie?.backdropImg).into(ivBackdropImg)
-        Glide.with(this).load(imageUrl + movie?.posterImg).into(ivPosterImg)
-        tvTitle.text = movie?.title
-        tvReleaseDate.text = movie?.releaseDate
-        tvRating.text = movie?.rating.toString()
-        tvOverview.text = movie?.overview
+//        Glide.with(this).load(imageUrl + movie?.backdropImg).into(ivBackdropImg)
+//        Glide.with(this).load(imageUrl + movie?.posterImg).into(ivPosterImg)
+//        tvTitle.text = movie?.title
+//        tvReleaseDate.text = movie?.releaseDate
+//        tvRating.text = movie?.rating.toString()
+//        tvOverview.text = movie?.overview
     }
 }

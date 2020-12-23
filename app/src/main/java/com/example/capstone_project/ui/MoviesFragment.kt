@@ -47,11 +47,11 @@ class MovieFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Fetch all popular movies on on create view
         fetchMovies()
 
         // Submit button click list movies recyclerview
-        //TODO:, search movies when
-        btn_submit.setOnClickListener{
+        search_btn.setOnClickListener{
             fetchMoviesByName()
         }
 
@@ -61,16 +61,16 @@ class MovieFragment : Fragment() {
         observeMovies()
     }
 
+    // TODO: fetch all movies when app is loaded
     private fun fetchMovies(){
 
     }
 
-    // Function to fetch movies from API
+    // Function to fetch movies from API with movie title search value as param
     private fun fetchMoviesByName(){
-        val year  = year.text.toString()
-        if (year.isNotBlank()){
-            val yearInt = year.toInt() // Convert year string to integer so it can be passed to getMovies method
-            viewModel.getMovies(yearInt)
+        val titleMovie  = input_movie_title.text.toString()
+        if (titleMovie.isNotBlank()){
+            viewModel.getSearchedMovies(titleMovie)
         } else {
             Toast.makeText(context, "Input is empty", Toast.LENGTH_LONG).show()
             Log.d("emptyInput", "Input is empty")
@@ -79,7 +79,7 @@ class MovieFragment : Fragment() {
 
     // Click listener for specific movie
     private fun onMovieClick(movie: Movie) {
-        // Open details activity of clicked movie and send movie so data of that movie can be displayed
+        // Open available subtitles for clicked movie
         val intent = Intent(context, SubtitlesFragment::class.java)
         intent.putExtra("movie", movie)
         startActivity(intent)

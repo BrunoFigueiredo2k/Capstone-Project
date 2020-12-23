@@ -18,7 +18,7 @@ class MovieViewModel : ViewModel(){
     val errorText: LiveData<String>
         get() = _errorText
 
-    fun getMovies(title: String) {
+    fun getSearchedMovies(title: String) {
         viewModelScope.launch {
             try {
                 movieRepository.getMovieItem(title)

@@ -21,7 +21,7 @@ class MovieRepository {
         try {
             //timeout the request after 5 seconds
             val result : ResultSetWithMovies = withTimeout(5_000) {
-                movieApiService.fetchAllMovies(title)
+                movieApiService.fetchSearchedMovies(title)
             }
 
             _movies.value = result.movies

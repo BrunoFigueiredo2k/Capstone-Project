@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.capstone_project.R
 import com.example.capstone_project.model.Download
-import com.example.capstone_project.model.Movie
 import kotlinx.android.synthetic.main.item_download.view.*
 
 class SubtitlesAdapter(private val downloads: List<Download>, private val onClick: (Download) -> Unit) :
@@ -20,24 +19,24 @@ class SubtitlesAdapter(private val downloads: List<Download>, private val onClic
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DownloadViewHolder {
         context = parent.context
 
-        return DownloadViewHolder(
+        return DownloadViewHolder (
             LayoutInflater.from(context).inflate(R.layout.item_download, parent, false)
         )
     }
 
     override fun getItemCount(): Int = downloads.size
 
-    override fun onBindViewHolder(holder: MovieAdapter.ViewHolder, position: Int) = holder.databind(downloads[position], position)
+    override fun onBindViewHolder(holder: DownloadViewHolder, position: Int) = holder.databind(downloads[position])
 
     inner class DownloadViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         init {
             itemView.setOnClickListener { onClick(downloads[adapterPosition]) }
         }
         @SuppressLint("SetTextI18n")
-        fun databind(download: Download, position: Int) {
-            // TODO bind download data
-            itemView.tvMovieTitle.text = ".."
+        fun databind(download: Download) {
             Glide.with(context).load(download.getCountryFlag()).into(itemView.ivMoviePoster)
+            itemView.tvMovieLanguage.text = download.language
+            itemView.tvMovieFile.text = download.fileName
         }
 
     }
