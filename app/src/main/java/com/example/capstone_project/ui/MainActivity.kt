@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import android.widget.SearchView;
 import android.widget.Toast.LENGTH_LONG
+import com.example.capstone_project.ui.adapter.ViewPagerAdapter
 
 class MainActivity : AppCompatActivity() {
 

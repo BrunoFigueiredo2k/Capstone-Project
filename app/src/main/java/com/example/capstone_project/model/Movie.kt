@@ -16,6 +16,5 @@ data class Movie (
 ) : Parcelable
 {
     // Function to get backdrop image file name
-    //TODO this is not the correct endpoint
     fun getImageUrl() = "https://image.tmdb.org/t/p/w500${posterImg}"
 }

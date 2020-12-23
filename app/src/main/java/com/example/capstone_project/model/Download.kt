@@ -23,3 +23,7 @@ data class Download(
     @ColumnInfo(name = "id")
     var id: Long? = null
 )
+{
+    // Function to get backdrop image file name
+    fun getCountryFlag() = "https://www.countryflags.io/$language/flat/64.png"
+}

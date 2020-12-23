@@ -1,30 +1,45 @@
 package com.example.capstone_project.ui
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.capstone_project.R
 import com.example.capstone_project.model.Movie
+import com.example.capstone_project.ui.adapter.MovieAdapter
 import kotlinx.android.synthetic.main.fragment_movies.*
 
 
-class MoviesFragment : Fragment() {
+class MovieFragment : Fragment() {
     private val movies = arrayListOf<Movie>()
-    private val gameAdapter =
-        MovieAdapter(movies)
+    private val viewModel: MovieViewModel by viewModels()
+    private val movieAdapter =
+        MovieAdapter(movies) { movie ->
+            onMovieClick(movie)
+        }
+    lateinit var layoutManager: LinearLayoutManager
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private fun observeMovies() {
+        viewModel.movies.observe(viewLifecycleOwner, Observer {movie ->
+            movies.clear()
+            movies.addAll(movie)
+            movieAdapter.notifyDataSetChanged()
+        })
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
-        setHasOptionsMenu(true)
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_movies, container, false)
     }
@@ -32,35 +47,42 @@ class MoviesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initViews()
-    }
+        fetchMovies()
 
-    private fun initViews() {
-        // Initialize the recycler view with a linear layout manager, adapter
-//        rvMovies.layoutManager =
-//            LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-//        rvMovies.adapter = gameAdapter
-//        rvMovies.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-
-        val exampleList = generateDummyList(500)
-        rvMovies.adapter =
-            MovieAdapter(exampleList)
-        rvMovies.layoutManager = LinearLayoutManager(context)
-        rvMovies.setHasFixedSize(true)
-    }
-
-    private fun generateDummyList(size: Int): List<Movie> {
-        val list = ArrayList<Movie>()
-        for (i in 0 until size) {
-            val drawable = when (i % 3) {
-                0 -> R.drawable.ic_baseline_star_24
-                1 -> R.drawable.ic_baseline_search_24
-                else -> R.drawable.ic_launcher_background
-            }
-            val item = Movie("Spiderman 2", 2020, i, drawable)
-            list += item
+        // Submit button click list movies recyclerview
+        //TODO:, search movies when
+        btn_submit.setOnClickListener{
+            fetchMoviesByName()
         }
-        return list
+
+        rvMovies.layoutManager = GridLayoutManager(context, 2)
+        rvMovies.adapter = movieAdapter
+
+        observeMovies()
+    }
+
+    private fun fetchMovies(){
+
+    }
+
+    // Function to fetch movies from API
+    private fun fetchMoviesByName(){
+        val year  = year.text.toString()
+        if (year.isNotBlank()){
+            val yearInt = year.toInt() // Convert year string to integer so it can be passed to getMovies method
+            viewModel.getMovies(yearInt)
+        } else {
+            Toast.makeText(context, "Input is empty", Toast.LENGTH_LONG).show()
+            Log.d("emptyInput", "Input is empty")
+        }
+    }
+
+    // Click listener for specific movie
+    private fun onMovieClick(movie: Movie) {
+        // Open details activity of clicked movie and send movie so data of that movie can be displayed
+        val intent = Intent(context, SubtitlesFragment::class.java)
+        intent.putExtra("movie", movie)
+        startActivity(intent)
     }
 
 }
