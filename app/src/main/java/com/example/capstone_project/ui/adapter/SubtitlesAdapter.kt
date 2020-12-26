@@ -9,26 +9,27 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.capstone_project.R
 import com.example.capstone_project.model.Download
+import com.example.capstone_project.ui.adapter.SubtitlesAdapter.*
 import kotlinx.android.synthetic.main.item_download.view.*
 
 class SubtitlesAdapter(private val downloads: List<Download>, private val onClick: (Download) -> Unit) :
-    RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
+    RecyclerView.Adapter<SubtitlesAdapter.ViewHolder>() {
 
     private lateinit var context: Context
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DownloadViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubtitlesAdapter.ViewHolder {
         context = parent.context
 
-        return DownloadViewHolder (
+        return ViewHolder (
             LayoutInflater.from(context).inflate(R.layout.item_download, parent, false)
         )
     }
 
     override fun getItemCount(): Int = downloads.size
 
-    override fun onBindViewHolder(holder: DownloadViewHolder, position: Int) = holder.databind(downloads[position])
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.databind(downloads[position])
 
-    inner class DownloadViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         init {
             itemView.setOnClickListener { onClick(downloads[adapterPosition]) }
         }

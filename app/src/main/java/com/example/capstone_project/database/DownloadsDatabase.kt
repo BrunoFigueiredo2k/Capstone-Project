@@ -5,13 +5,13 @@ import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.capstone_project.dao.DownloadDao
 import com.example.capstone_project.model.Download
-import com.example.capstone_project.model.Movie
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 
-class Converters {
+// TODO fix date converter or use YYYY-MM-DD implementation from level 5 task 2
+class DateConverter {
     @TypeConverter
     fun fromTimestamp(value: Long?): Date? {
         return value?.let { Date(it) }
@@ -23,7 +23,8 @@ class Converters {
     }
 }
 
-@Database(entities = [Movie::class], version = 1, exportSchema = false)
+@Database(entities = [Download::class], version = 1, exportSchema = false)
+@TypeConverters(DateConverter::class)
 abstract class DownloadsRoomDatabase : RoomDatabase() {
 
     abstract fun downloadDao(): DownloadDao

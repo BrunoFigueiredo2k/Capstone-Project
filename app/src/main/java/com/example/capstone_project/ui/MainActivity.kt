@@ -23,7 +23,6 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
 
         // Adapter for search function
-        adapter = ArrayAdapter(this, R.layout.item_movie, resources.getStringArray(R.array.countries_array))
         lv_listView.adapter = adapter
         lv_listView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
             // TODO: change this click listener to opening subtitles list fragment
@@ -40,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         val adapter = ViewPagerAdapter(
             supportFragmentManager
         )
-        adapter.addFragment(MoviesFragment(), "Movies")
+        adapter.addFragment(MovieFragment(), "Movies")
         adapter.addFragment(DownloadsFragment(), "Downloads")
 
         viewPager.adapter = adapter

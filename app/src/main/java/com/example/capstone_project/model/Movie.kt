@@ -2,12 +2,12 @@ package com.example.capstone_project.model
 
 import android.os.Parcelable
 import androidx.annotation.DrawableRes
+import androidx.room.Entity
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Movie (
-    // TODO: check endpoint for tmdb api for annotations
     @SerializedName("title") var title: String,
     @SerializedName("year") var releaseYear: Int,
     @SerializedName("genre") var genre: String, // TODO: not in endpoint
