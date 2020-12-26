@@ -3,6 +3,7 @@ package com.example.capstone_project.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
+import android.view.MenuItem
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -49,26 +50,10 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, "Current Fragment: $currentFragment", LENGTH_LONG).show()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-
-        // TODO: only display on Movies fragment
-        // Search function for searchView in activity_main
-        val search = menu?.findItem(R.id.nav_search)
-        val searchView = search?.actionView as SearchView
-        searchView.queryHint = "Search movies.."
-
-        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                adapter.filter.filter(newText)
-                return true
-            }
-        })
-        return true
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_settings -> true
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }

@@ -3,9 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.capstone_project.ui.MainActivity">
     <item
-        android:id="@+id/nav_search"
-        android:icon="@drawable/ic_baseline_search_24"
-        android:title="@string/search"
-        app:showAsAction="ifRoom|withText"
-        app:actionViewClass="android.widget.SearchView" />
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
 </menu>
