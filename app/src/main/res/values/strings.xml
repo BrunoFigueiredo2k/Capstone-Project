@@ -13,4 +13,5 @@
     <string name="search_hint">Search movies..</string>
     <string name="instruction_movies_tab">Click movie to view available subs!</string>
     <string name="title_download_subs">Subtitle downloads</string>
+    <string name="current_state_display">currently displaying: Popular movies</string>
 </resources>

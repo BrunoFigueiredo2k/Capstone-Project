@@ -18,6 +18,8 @@ class MovieAdapter(private val movies: List<Movie>, private val onClick: (Movie)
     private lateinit var context: Context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieAdapter.ViewHolder {
+        context = parent.context
+
         return ViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.item_movie, parent, false)
         )

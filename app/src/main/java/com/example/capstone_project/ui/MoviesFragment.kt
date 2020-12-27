@@ -1,5 +1,6 @@
 package com.example.capstone_project.ui
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.capstone_project.R
@@ -24,7 +26,6 @@ class MovieFragment : Fragment() {
         MovieAdapter(movies) { movie ->
             onMovieClick(movie)
         }
-    lateinit var layoutManager: LinearLayoutManager
 
     private fun observeMovies() {
         viewModel.movies.observe(viewLifecycleOwner, Observer {movie ->
@@ -54,7 +55,15 @@ class MovieFragment : Fragment() {
             fetchMoviesByName()
         }
 
-        rvMovies.layoutManager = GridLayoutManager(context, 2)
+        // Reset icon click, calls fetchMovies function which returns popular movies (starting list)
+        reset_movies_icon.setOnClickListener{
+            input_movie_title.getText()?.clear() // Reset input field text
+            tvCurrentState.setText(R.string.current_state_display) // Reset to popular movies display text
+            fetchMovies()
+        }
+
+        rvMovies.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        rvMovies.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         rvMovies.adapter = movieAdapter
 
         observeMovies()
@@ -66,10 +75,12 @@ class MovieFragment : Fragment() {
     }
 
     // Function to fetch movies from API with movie title search value as param
+    @SuppressLint("SetTextI18n")
     private fun fetchMoviesByName(){
         val titleMovie  = input_movie_title.text.toString()
         if (titleMovie.isNotBlank()){
             viewModel.getSearchedMovies(titleMovie)
+            tvCurrentState.setText("currently displaying:" + input_movie_title.getText())
         } else {
             Toast.makeText(context, "Input is empty", Toast.LENGTH_LONG).show()
             Log.d("emptyInput", "Input is empty")

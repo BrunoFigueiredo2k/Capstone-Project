@@ -9,12 +9,12 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Movie (
     @SerializedName("title") var title: String,
-    @SerializedName("year") var releaseYear: Int,
+    @SerializedName("release_date")var releaseYear: String,
     @SerializedName("genre") var genre: String, // TODO: not in endpoint
-    @SerializedName("ratings") var rating: Int,
-    @SerializedName("img_url") var posterImg: String
+    @SerializedName("vote_average") var rating: Float,
+    @SerializedName("poster_path") var posterImg: String
 ) : Parcelable
 {
-    // Function to get backdrop image file name
+    // Function to get poster image file name
     fun getImageUrl() = "https://image.tmdb.org/t/p/w500${posterImg}"
 }
