@@ -17,7 +17,6 @@ import com.example.capstone_project.model.Movie
 import com.example.capstone_project.ui.adapter.MovieAdapter
 import kotlinx.android.synthetic.main.fragment_movies.*
 
-
 class MovieFragment : Fragment() {
     private val movies = arrayListOf<Movie>()
     private val viewModel: MovieViewModel by viewModels()
@@ -63,7 +62,7 @@ class MovieFragment : Fragment() {
 
     // TODO: fetch all movies when app is loaded
     private fun fetchMovies(){
-
+        viewModel.fetchMovies()
     }
 
     // Function to fetch movies from API with movie title search value as param

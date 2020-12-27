@@ -17,6 +17,20 @@ class MovieRepository {
     val movie: LiveData<ArrayList<Movie>>
     get() = _movies
 
+    suspend fun fetchAllMovies(){
+        try {
+            //timeout the request after 5 seconds
+            val result : ResultSetWithMovies = withTimeout(5_000) {
+                movieApiService.fetchAllMovies()
+            }
+
+            _movies.value = result.movies
+            Log.d("movies", result.toString())
+        } catch (error: Throwable) {
+            throw MovieRefreshError("Unable to refresh movies", error)
+        }
+    }
+
     suspend fun getMovieItem(title : String)  {
         try {
             //timeout the request after 5 seconds

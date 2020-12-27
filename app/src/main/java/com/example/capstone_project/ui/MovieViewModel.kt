@@ -18,6 +18,19 @@ class MovieViewModel : ViewModel(){
     val errorText: LiveData<String>
         get() = _errorText
 
+    // Function to fetch all movies once the page loads
+    fun fetchMovies() {
+        viewModelScope.launch {
+            try {
+                movieRepository.fetchAllMovies()
+            } catch (error: MovieRepository.MovieRefreshError) {
+                _errorText.value = error.message
+                Log.e("Movie error", error.cause.toString())
+            }
+        }
+    }
+
+    // Function to fetch movie based on search value
     fun getSearchedMovies(title: String) {
         viewModelScope.launch {
             try {

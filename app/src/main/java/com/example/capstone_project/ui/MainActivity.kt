@@ -16,20 +16,10 @@ import com.example.capstone_project.ui.adapter.ViewPagerAdapter
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var adapter: ArrayAdapter<*>
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
-
-        // Adapter for search function
-        lv_listView.adapter = adapter
-        lv_listView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
-            // TODO: change this click listener to opening subtitles list fragment
-            Toast.makeText(applicationContext, parent?.getItemAtPosition(position).toString(), Toast.LENGTH_LONG).show()
-        }
-        lv_listView.emptyView = tv_emptyTextView
 
         // Set up top tabs
         setUpTabs()
