@@ -60,8 +60,8 @@ tools:context=".ui.MoviesFragment">
             android:id="@+id/tvCurrentState"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
             android:text="@string/current_state_display"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvInstruction" />
 

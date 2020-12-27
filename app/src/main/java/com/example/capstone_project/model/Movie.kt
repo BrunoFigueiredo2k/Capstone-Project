@@ -9,8 +9,8 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Movie (
     @SerializedName("title") var title: String,
-    @SerializedName("release_date")var releaseYear: String,
-    @SerializedName("genre") var genre: String, // TODO: not in endpoint
+    @SerializedName("release_date") var releaseYear: String,
+    @SerializedName("genre_ids") var genreIds: ArrayList<Int>, // TODO: not in endpoint
     @SerializedName("vote_average") var rating: Float,
     @SerializedName("poster_path") var posterImg: String
 ) : Parcelable

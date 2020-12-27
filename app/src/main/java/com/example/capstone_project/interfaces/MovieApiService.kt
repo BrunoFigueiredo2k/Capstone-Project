@@ -8,13 +8,13 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface MovieApiService {
-    // TODO: correct endpoint need to be put here
-    // The GET method needed to retrieve our movie data
+    // GET request to fetch movies based on search input movie title (paramater)
     @GET("/3/search/movie?api_key=da007e76d36aca68e174f2948e09389c")
     suspend fun fetchSearchedMovies(
         @Query("query") name: String
-    ): ResultSetWithMovies // TODO: check if has to be wrapped in array list class
+    ): ResultSetWithMovies
 
-    @GET("https://api.themoviedb.org/3/movie/popular?api_key=da007e76d36aca68e174f2948e09389c&language=en-US&page=1")
+    // GET request to fetch all popular movies
+    @GET("/3/movie/popular?api_key=da007e76d36aca68e174f2948e09389c&language=en-US&page=1")
     suspend fun fetchAllMovies() : ResultSetWithMovies
 }

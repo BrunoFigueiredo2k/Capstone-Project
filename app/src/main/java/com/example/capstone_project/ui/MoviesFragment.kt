@@ -80,7 +80,7 @@ class MovieFragment : Fragment() {
         val titleMovie  = input_movie_title.text.toString()
         if (titleMovie.isNotBlank()){
             viewModel.getSearchedMovies(titleMovie)
-            tvCurrentState.setText("currently displaying:" + input_movie_title.getText())
+            tvCurrentState.setText("currently displaying: " + input_movie_title.getText())
         } else {
             Toast.makeText(context, "Input is empty", Toast.LENGTH_LONG).show()
             Log.d("emptyInput", "Input is empty")
@@ -90,7 +90,7 @@ class MovieFragment : Fragment() {
     // Click listener for specific movie
     private fun onMovieClick(movie: Movie) {
         // Open available subtitles for clicked movie
-        val intent = Intent(context, SubtitlesFragment::class.java)
+        val intent = Intent(context, SubtitlesActivity::class.java)
         intent.putExtra("movie", movie)
         startActivity(intent)
     }

@@ -37,7 +37,7 @@ class MovieAdapter(private val movies: List<Movie>, private val onClick: (Movie)
         fun databind(movie: Movie) {
             itemView.tvMovieTitle.text = movie.title
             itemView.tvMovieReleaseYear.text = movie.releaseYear.toString()
-            itemView.tvMovieGenre.text = movie.genre
+            itemView.tvMovieGenre.text = movie.genreIds.toString()
             itemView.tvMovieRating.text = movie.rating.toString()
 
             Glide.with(context).load(movie.getImageUrl()).into(itemView.ivMoviePoster)
