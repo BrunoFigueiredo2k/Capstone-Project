@@ -1,4 +1,4 @@
-package com.example.capstone_project.ui
+package com.example.capstone_project.ui.ViewModel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

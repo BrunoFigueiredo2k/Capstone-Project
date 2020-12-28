@@ -1,4 +1,4 @@
-package com.example.capstone_project.ui
+package com.example.capstone_project.ui.ViewModel
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -24,8 +24,7 @@ class MovieViewModel : ViewModel(){
             try {
                 movieRepository.fetchAllMovies()
             } catch (error: MovieRepository.MovieRefreshError) {
-                _errorText.value = error.message
-                Log.e("Movie error", error.cause.toString())
+                logError(error)
             }
         }
     }
@@ -37,9 +36,13 @@ class MovieViewModel : ViewModel(){
                 movieRepository.getMovieItem(title)
 
             } catch (error: MovieRepository.MovieRefreshError) {
-                _errorText.value = error.message
-                Log.e("Movie error", error.cause.toString())
+                logError(error)
             }
         }
+    }
+
+    fun logError(error : MovieRepository.MovieRefreshError){
+        _errorText.value = error.message
+        Log.e("Movie error", error.cause.toString())
     }
 }

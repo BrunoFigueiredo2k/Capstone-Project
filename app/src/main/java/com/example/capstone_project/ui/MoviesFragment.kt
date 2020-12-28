@@ -12,10 +12,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.capstone_project.R
 import com.example.capstone_project.model.Movie
+import com.example.capstone_project.ui.ViewModel.MovieViewModel
 import com.example.capstone_project.ui.adapter.MovieAdapter
 import kotlinx.android.synthetic.main.fragment_movies.*
 
@@ -46,7 +46,6 @@ class MovieFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         // Fetch all popular movies on on create view
         fetchMovies()
 
@@ -62,14 +61,19 @@ class MovieFragment : Fragment() {
             fetchMovies()
         }
 
-        rvMovies.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        rvMovies.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-        rvMovies.adapter = movieAdapter
+        initViews()
 
         observeMovies()
     }
 
-    // TODO: fetch all movies when app is loaded
+    // Initialize views (adapter/recyclerview)
+    fun initViews(){
+        rvMovies.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        rvMovies.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+        rvMovies.adapter = movieAdapter
+    }
+
+    // Fetch all popular movies when activity is loaded
     private fun fetchMovies(){
         viewModel.fetchMovies()
     }

@@ -11,11 +11,9 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.capstone_project.R
 import com.example.capstone_project.model.Download
-import com.example.capstone_project.model.Movie
+import com.example.capstone_project.ui.ViewModel.DownloadViewModel
 import com.example.capstone_project.ui.adapter.DownloadsAdapter
-import com.example.capstone_project.ui.adapter.MovieAdapter
 import kotlinx.android.synthetic.main.fragment_downloads.*
-import kotlinx.android.synthetic.main.fragment_movies.*
 
 class DownloadsFragment : Fragment() {
     private val downloads = arrayListOf<Download>()

@@ -50,7 +50,7 @@ abstract class DownloadsRoomDatabase : RoomDatabase() {
                                     INSTANCE?.let { database ->
                                         CoroutineScope(Dispatchers.IO).launch {
                                             // TODO: check if this works
-                                            database.downloadDao().insertDownload(Download("Title", "", "", "", Date()))
+                                            database.downloadDao().insertDownload(Download("Spiderman", "en", "spiderman.srt", "https://s9.osdb.link/features/5/4/4/650445.jpg", Date()))
                                         }
                                     }
                                 }
