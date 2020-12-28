@@ -2,11 +2,10 @@ package com.example.capstone_project.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.bumptech.glide.Glide
 import com.example.capstone_project.R
 import com.example.capstone_project.model.Movie
-import kotlinx.android.synthetic.main.item_download.*
-import kotlinx.android.synthetic.main.subtitles_activity.*
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_subtitles.*
 
 class SubtitlesActivity : AppCompatActivity(){
     // API url for country flags (language)
@@ -15,7 +14,18 @@ class SubtitlesActivity : AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.subtitles_activity)
+        setContentView(R.layout.activity_subtitles)
+
+        // set toolbar as support action bar
+        // TODO: fix setting up toolbar
+        setSupportActionBar(findViewById(R.id.toolbar))
+
+        supportActionBar?.apply {
+            title = R.string.title_download_subs.toString()
+            // show back button on toolbar on back button press, it will navigate to movies activity
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
 
         // Get movie sent with intent from MovieFragment to this activity
         val movie = intent.getParcelableExtra<Movie>("movie")

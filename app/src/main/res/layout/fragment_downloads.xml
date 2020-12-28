@@ -12,7 +12,7 @@ tools:context=".ui.DownloadsFragment">
         tools:context=".ui.DownloadsFragment">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvMovies"
+            android:id="@+id/rvDownloads"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:paddingTop="20dp"

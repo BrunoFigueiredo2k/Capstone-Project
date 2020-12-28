@@ -4,6 +4,7 @@ import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
@@ -14,10 +15,15 @@ data class Download(
     var movieTitle: String,
 
     @ColumnInfo(name = "language")
+    @SerializedName("language") // TODO: new data from api
     var language: String,
 
     @ColumnInfo(name = "fileName")
+    @SerializedName("file_name") // TODO: new data from api
     var fileName: String,
+
+    @ColumnInfo(name = "imgUrl")
+    var posterImgUrl: String,
 
     @ColumnInfo(name = "downloadDate")
     var downloadDate: Date,
