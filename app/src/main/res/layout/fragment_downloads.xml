@@ -11,6 +11,16 @@ tools:context=".ui.DownloadsFragment">
         android:layout_height="match_parent"
         tools:context=".ui.DownloadsFragment">
 
+        <TextView
+            android:id="@+id/tvStatusDownloads"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text=""
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvDownloads"
             android:layout_width="match_parent"
@@ -20,7 +30,7 @@ tools:context=".ui.DownloadsFragment">
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/tvStatusDownloads" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

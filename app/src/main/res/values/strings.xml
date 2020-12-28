@@ -14,4 +14,6 @@
     <string name="instruction_movies_tab">Click movie to view available subs!</string>
     <string name="title_download_subs">Subtitle downloads</string>
     <string name="current_state_display">currently displaying: Popular movies</string>
+    <string name="no_downloads">No downloads.. You haven\'t downloaded any subtitles yet.</string>
+    <string name="your_downloads">Your downloaded subtitles:</string>
 </resources>

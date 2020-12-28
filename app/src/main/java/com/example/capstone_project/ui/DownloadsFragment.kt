@@ -48,14 +48,27 @@ class DownloadsFragment : Fragment() {
         // Fetch all popular movies on on create view
         fetchDownloadsSubtitles()
 
-        rvDownloads.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        rvDownloads.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-        rvDownloads.adapter = downloadAdapter
+        // TODO: fix and test this if statement after fetchDownloadsSubtitles function is finished
+        // If there are no downloads in db change TextView telling user there are no downloads
+        if (fetchDownloadsSubtitles() == null){
+            tvStatusDownloads.setText(R.string.no_downloads)
+        } else {
+            tvStatusDownloads.setText(R.string.your_downloads)
+            initViews()
+        }
 
         // Update observer/adapter for any changes in downloaded movie subtitles
         observeDownloads()
     }
 
+    // Initialize recyclerview with subtitle downloads
+    private fun initViews(){
+        rvDownloads.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        rvDownloads.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+        rvDownloads.adapter = downloadAdapter
+    }
+
+    // TODO: fetch downloads from db
     private fun fetchDownloadsSubtitles(){
 
     }
