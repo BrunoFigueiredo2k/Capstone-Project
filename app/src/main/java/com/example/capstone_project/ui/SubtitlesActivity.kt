@@ -1,7 +1,13 @@
 package com.example.capstone_project.ui
 
+import android.app.DownloadManager
+import android.content.Context
 import android.content.Intent
+import android.database.Cursor
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
@@ -19,6 +25,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_subtitles.*
 import kotlinx.android.synthetic.main.fragment_movies.*
 import kotlinx.android.synthetic.main.item_download.*
+import java.io.File
 
 class SubtitlesActivity : AppCompatActivity(){
     private val downloads = arrayListOf<Download>()
@@ -28,33 +35,29 @@ class SubtitlesActivity : AppCompatActivity(){
             onSubtitleDownloadClick(download)
         }
 
-    // API url for country flags (language)
-    val countryFlagBaseUrl : String = "https://www.countryflags.io/"
-    val countryFlagExtensionUrl : String = "/flat/64.png"
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_subtitles)
 
         setUpActionBar()
 
-        // TODO: send imdb_id through intent so it can be used as param for subtitles api call
         // Get movie sent with intent from MovieFragment to this activity
         val movie = intent.getParcelableExtra<Movie>("movie")
         // Set movie title from intent
         tvMovieTitle.text = movie?.title
 
-        // Set language flag & text and subtitle file name
-        // TODO: fill the dots with the data when subs api call has been fixed
-//        Glide.with(this).load(countryFlagBaseUrl + ... + countryFlagExtensionUrl).into(ivMoviePoster)
-//        tvMovieFile.text = ...
+        // Get imdb_id to pass to opensubtitles api
+        var tmdbId = movie?.getMovieImdbId()
+        if (tmdbId != null) {
+            fetchSubtitles(tmdbId)
+        }
 
         initViews()
     }
 
-    // TODO: pass imdb_id as param here when sending from tmdb api call through intent has been fixed
-    private fun fetchSubtitles(){
-//        viewModel.fetchSubtitles(...)
+    // Fetch subtitles for passed movie based on imdb_id
+    private fun fetchSubtitles(imdbId : String){
+        viewModel.fetchSubtitles(imdbId)
     }
 
     fun initViews(){
@@ -63,10 +66,42 @@ class SubtitlesActivity : AppCompatActivity(){
         rvSubtitles.adapter = subtitlesAdapter
     }
 
-    // TODO: onclick download button fire this download function using DownloadManager
-    // Click listener for specific movie
+    // Click listener for specific subtitle of movie
+    // TODO: Source: https://stackoverflow.com/questions/63099515/how-to-download-file-from-url-in-android
     private fun onSubtitleDownloadClick(download: Download) {
+        // TODO: not sure if writing to this directory is a good idea (Ask Pim?)
+        // Directory that the download will be written to
+        val directory = File(Environment.DIRECTORY_DOWNLOADS)
 
+        // Check if directory doesn't exist and if it doesn't create directory
+        if (!directory.exists()) {
+            directory.mkdirs()
+        }
+
+        // TODO: downloadmanager accepts the download url, need to figure out what this url is in endpoint
+        val downloadFileUrl = download.fileName
+
+        startFileDownload(downloadFileUrl)
+    }
+
+    private fun startFileDownload(url : String): Long{
+        val extension = url?.substring(url.lastIndexOf("."))
+        val downloadReference: Long
+        var downloadManager: DownloadManager
+        downloadManager = this.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        val uri = Uri.parse(url)
+        val request = DownloadManager.Request(uri)
+        request.setDestinationInExternalPublicDir(
+            "/your_folder",
+            "srt" + System.currentTimeMillis() + extension
+        )
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+        request.setTitle(title)
+        Toast.makeText(this, "start Downloading..", Toast.LENGTH_SHORT).show()
+
+        downloadReference = downloadManager?.enqueue(request) ?: 0
+
+        return downloadReference
     }
 
     private fun setUpActionBar() {

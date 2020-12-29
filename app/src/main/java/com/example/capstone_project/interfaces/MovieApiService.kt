@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import com.example.capstone_project.model.ResultSetWithMovies
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MovieApiService {
@@ -17,4 +18,5 @@ interface MovieApiService {
     // GET request to fetch all popular movies
     @GET("/3/movie/popular?api_key=da007e76d36aca68e174f2948e09389c&language=en-US&page=1")
     suspend fun fetchAllMovies() : ResultSetWithMovies
+
 }
