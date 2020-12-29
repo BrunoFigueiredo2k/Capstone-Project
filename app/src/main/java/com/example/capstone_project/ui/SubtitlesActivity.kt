@@ -7,7 +7,9 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import android.widget.Toast
+import android.widget.Toast.LENGTH_LONG
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
@@ -30,6 +32,7 @@ import java.io.File
 class SubtitlesActivity : AppCompatActivity(){
     private val downloads = arrayListOf<Download>()
     private val viewModel: SubtitleViewModel by viewModels()
+    private val movieViewModel : MovieViewModel by viewModels()
     private val subtitlesAdapter =
         SubtitlesAdapter(downloads) { download ->
             onSubtitleDownloadClick(download)
@@ -47,10 +50,12 @@ class SubtitlesActivity : AppCompatActivity(){
         tvMovieTitle.text = movie?.title
 
         // Get imdb_id to pass to opensubtitles api
-        var tmdbId = movie?.getMovieImdbId()
-        if (tmdbId != null) {
-            fetchSubtitles(tmdbId)
-        }
+        // TODO: fix this to return imdb_id as string
+        val tmdbId = movie?.id?.let { movieViewModel.getImdbId(it) }
+        fetchSubtitles(tmdbId.toString())
+//
+//        Toast.makeText(this, tmdbId, LENGTH_LONG).show()
+//        Log.d("tmdb_id", tmdbId)
 
         initViews()
     }
@@ -92,7 +97,7 @@ class SubtitlesActivity : AppCompatActivity(){
         val uri = Uri.parse(url)
         val request = DownloadManager.Request(uri)
         request.setDestinationInExternalPublicDir(
-            "/your_folder",
+            "/", // TODO: not sure about this param
             "srt" + System.currentTimeMillis() + extension
         )
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)

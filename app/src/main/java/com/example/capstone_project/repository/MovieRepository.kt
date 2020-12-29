@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.capstone_project.interfaces.MovieApiService
 import com.example.capstone_project.model.Movie
+import com.example.capstone_project.model.MovieId
 import com.example.capstone_project.model.ResultSetWithMovies
 import com.example.capstone_project.ui.api.MovieApi
 import kotlinx.coroutines.withTimeout
@@ -40,6 +41,21 @@ class MovieRepository {
 
             _movies.value = result.movies
             Log.d("movies", result.toString())
+        } catch (error: Throwable) {
+            throw MovieRefreshError("Unable to refresh movies", error)
+        }
+    }
+
+    suspend fun getMovieImdbId(id : String): String {
+        try {
+            //timeout the request after 5 seconds
+            val result : MovieId = withTimeout(5_000) {
+                movieApiService.getMovieImdbId(id)
+            }
+
+            // TODO: this log is working. Figure out how to return this to acticity
+            Log.d("imdb_id", result.imdbId)
+            return result.imdbId
         } catch (error: Throwable) {
             throw MovieRefreshError("Unable to refresh movies", error)
         }

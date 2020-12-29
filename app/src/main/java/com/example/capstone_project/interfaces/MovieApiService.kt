@@ -3,6 +3,7 @@ package com.example.capstone_project.interfaces
 import android.R
 import android.annotation.SuppressLint
 import android.content.Context
+import com.example.capstone_project.model.MovieId
 import com.example.capstone_project.model.ResultSetWithMovies
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -11,7 +12,7 @@ import retrofit2.http.Query
 interface MovieApiService {
     // GET request to fetch movies based on search input movie title (paramater)
     @GET("/3/search/movie?api_key=da007e76d36aca68e174f2948e09389c")
-    suspend fun fetchSearchedMovies(
+        suspend fun fetchSearchedMovies(
         @Query("query") name: String
     ): ResultSetWithMovies
 
@@ -19,4 +20,9 @@ interface MovieApiService {
     @GET("/3/movie/popular?api_key=da007e76d36aca68e174f2948e09389c&language=en-US&page=1")
     suspend fun fetchAllMovies() : ResultSetWithMovies
 
+    // Function to get poster image file name
+    @GET("/3/movie/{id}/external_ids?api_key=da007e76d36aca68e174f2948e09389c")
+    suspend fun getMovieImdbId(
+        @Path("id") id : String
+    ) : MovieId
 }
