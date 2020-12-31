@@ -67,7 +67,7 @@
                 android:paddingTop="5dp"
                 android:paddingBottom="10dp"
                 android:text="downloaded: 27/11/2020"
-                android:textSize="11sp" />
+                android:textSize="9sp" />
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

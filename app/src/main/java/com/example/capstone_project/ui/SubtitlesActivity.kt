@@ -2,8 +2,6 @@ package com.example.capstone_project.ui
 
 import android.app.DownloadManager
 import android.content.Context
-import android.content.Intent
-import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -12,7 +10,6 @@ import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.capstone_project.R
@@ -20,8 +17,6 @@ import com.example.capstone_project.model.Download
 import com.example.capstone_project.model.Movie
 import com.example.capstone_project.ui.ViewModel.MovieViewModel
 import com.example.capstone_project.ui.ViewModel.SubtitleViewModel
-import com.example.capstone_project.ui.adapter.DownloadsAdapter
-import com.example.capstone_project.ui.adapter.MovieAdapter
 import com.example.capstone_project.ui.adapter.SubtitlesAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_subtitles.*
@@ -51,17 +46,17 @@ class SubtitlesActivity : AppCompatActivity(){
 
         // Get imdb_id to pass to opensubtitles api
         // TODO: fix this to return imdb_id as string
-        val tmdbId = movie?.id?.let { movieViewModel.getImdbId(it) }
-        fetchSubtitles(tmdbId.toString())
-//
-//        Toast.makeText(this, tmdbId, LENGTH_LONG).show()
-//        Log.d("tmdb_id", tmdbId)
+        movie?.id?.let {
+            movieViewModel.getImdbId(it)
+        }.toString()?.let {
+            fetchSubtitles(it)
+        }
 
         initViews()
     }
 
     // Fetch subtitles for passed movie based on imdb_id
-    private fun fetchSubtitles(imdbId : String){
+    private fun fetchSubtitles(imdbId: String){
         viewModel.fetchSubtitles(imdbId)
     }
 

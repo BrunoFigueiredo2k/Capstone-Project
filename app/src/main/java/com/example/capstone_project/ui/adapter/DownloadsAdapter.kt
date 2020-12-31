@@ -10,8 +10,7 @@ import com.bumptech.glide.Glide
 import com.example.capstone_project.R
 import com.example.capstone_project.model.Download
 import kotlinx.android.synthetic.main.item_downloaded.view.*
-import kotlinx.android.synthetic.main.item_downloaded.view.ivMoviePoster
-import kotlinx.android.synthetic.main.item_downloaded.view.tvMovieTitle
+import java.util.*
 
 class DownloadsAdapter(private val games: List<Download>) : RecyclerView.Adapter<DownloadsAdapter.ViewHolder>() {
     private lateinit var context: Context
@@ -41,7 +40,17 @@ class DownloadsAdapter(private val games: List<Download>) : RecyclerView.Adapter
             itemView.tvMovieTitle.text = download.movieTitle
             itemView.tvMovieLanguage.text = download.language
             itemView.tvMovieFile.text = download.fileName
-            itemView.tvDownloadDate.text = download.downloadDate.toString()
+            itemView.tvDownloadDate.text = "downloaded: " + printYearMonthDayFormat(download.downloadDate)
         }
+    }
+
+    // Function to format Date type to DD/MM/YYYY
+    private fun printYearMonthDayFormat(date : Calendar): String {
+        val year: Int = date.get(Calendar.YEAR)
+        val month: Int = date.get(Calendar.MONTH)
+        val day: Int = date.get(Calendar.DAY_OF_WEEK)
+        val divider : String = "/"
+
+        return "$day/$month/$year"
     }
 }

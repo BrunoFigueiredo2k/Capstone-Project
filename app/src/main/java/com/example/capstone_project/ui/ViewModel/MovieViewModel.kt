@@ -41,11 +41,12 @@ class MovieViewModel : ViewModel(){
         }
     }
 
+    val imdbId = movieRepository.movieId
+
     fun getImdbId(id : String){
         viewModelScope.launch {
             try {
-                val imdbId = movieRepository.getMovieImdbId(id)
-                Log.d("imdb_id", imdbId)
+                movieRepository.getMovieImdbId(id)
             } catch (error: MovieRepository.MovieRefreshError) {
                 logError(error)
             }

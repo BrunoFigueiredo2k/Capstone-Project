@@ -13,14 +13,14 @@ import java.util.*
 // TODO fix date converter or use YYYY-MM-DD implementation from level 5 task 2
 class DateConverter {
     @TypeConverter
-    fun fromTimestamp(value: Long?): Date? {
-        return value?.let { Date(it) }
+    fun fromTimestamp(value: Long?): Calendar? = value?.let { value ->
+        GregorianCalendar().also { calendar ->
+            calendar.timeInMillis = value
+        }
     }
 
     @TypeConverter
-    fun dateToTimestamp(date: Date?): Long? {
-        return date?.time?.toLong()
-    }
+    fun dateToTimestamp(timestamp: Calendar?): Long? = timestamp?.timeInMillis
 }
 
 @Database(entities = [Download::class], version = 1, exportSchema = false)
@@ -50,7 +50,7 @@ abstract class DownloadsRoomDatabase : RoomDatabase() {
                                     INSTANCE?.let { database ->
                                         CoroutineScope(Dispatchers.IO).launch {
                                             // TODO: check if this works
-                                            database.downloadDao().insertDownload(Download("Spiderman", "en", "spiderman.srt", "https://s9.osdb.link/features/5/4/4/650445.jpg", Date()))
+                                            database.downloadDao().insertDownload(Download("Spiderman", "en", "spiderman.srt", "https://s9.osdb.link/features/5/4/4/650445.jpg", Calendar.getInstance()))
                                         }
                                     }
                                 }

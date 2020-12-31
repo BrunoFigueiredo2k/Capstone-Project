@@ -26,7 +26,7 @@ data class Download(
     var posterImgUrl: String,
 
     @ColumnInfo(name = "downloadDate")
-    var downloadDate: Date,
+    var downloadDate: Calendar,
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")

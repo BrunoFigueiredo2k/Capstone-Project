@@ -46,7 +46,12 @@ class MovieRepository {
         }
     }
 
-    suspend fun getMovieImdbId(id : String): String {
+    private val _movieId: MutableLiveData<String> = MutableLiveData()
+
+    val movieId: LiveData<String>
+        get() = _movieId
+
+    suspend fun getMovieImdbId(id : String) {
         try {
             //timeout the request after 5 seconds
             val result : MovieId = withTimeout(5_000) {
@@ -55,7 +60,7 @@ class MovieRepository {
 
             // TODO: this log is working. Figure out how to return this to acticity
             Log.d("imdb_id", result.imdbId)
-            return result.imdbId
+            _movieId.value = result.imdbId
         } catch (error: Throwable) {
             throw MovieRefreshError("Unable to refresh movies", error)
         }
