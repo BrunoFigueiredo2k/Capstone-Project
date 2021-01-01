@@ -10,11 +10,14 @@ import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.capstone_project.R
 import com.example.capstone_project.model.Download
 import com.example.capstone_project.model.Movie
+import com.example.capstone_project.repository.MovieRepository
 import com.example.capstone_project.ui.ViewModel.MovieViewModel
 import com.example.capstone_project.ui.ViewModel.SubtitleViewModel
 import com.example.capstone_project.ui.adapter.SubtitlesAdapter
@@ -26,12 +29,19 @@ import java.io.File
 
 class SubtitlesActivity : AppCompatActivity(){
     private val downloads = arrayListOf<Download>()
-    private val viewModel: SubtitleViewModel by viewModels()
+    private val subtitleViewModel: SubtitleViewModel by viewModels()
     private val movieViewModel : MovieViewModel by viewModels()
     private val subtitlesAdapter =
         SubtitlesAdapter(downloads) { download ->
             onSubtitleDownloadClick(download)
         }
+
+    // Observe livedata String for imdbId and pass as param to fetch subtitles based on this id
+    private fun observeMovieImdbId(){
+        movieViewModel.movieId.observe(this, Observer {id ->
+            fetchSubtitles(id)
+        })
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,19 +55,17 @@ class SubtitlesActivity : AppCompatActivity(){
         tvMovieTitle.text = movie?.title
 
         // Get imdb_id to pass to opensubtitles api
-        // TODO: fix this to return imdb_id as string
-        movie?.id?.let {
-            movieViewModel.getImdbId(it)
-        }.toString()?.let {
-            fetchSubtitles(it)
-        }
+        val movieId = movie?.id
+        movieViewModel.getImdbId(movieId.toString())
+
+        observeMovieImdbId()
 
         initViews()
     }
 
     // Fetch subtitles for passed movie based on imdb_id
-    private fun fetchSubtitles(imdbId: String){
-        viewModel.fetchSubtitles(imdbId)
+    private fun fetchSubtitles(imdbId : String){
+        subtitleViewModel.fetchSubtitles(imdbId)
     }
 
     fun initViews(){

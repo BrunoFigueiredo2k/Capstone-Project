@@ -10,7 +10,6 @@ import kotlinx.coroutines.launch
 
 class MovieViewModel : ViewModel(){
     private val movieRepository = MovieRepository()
-
     val movies = movieRepository.movie
 
     private val _errorText: MutableLiveData<String> = MutableLiveData()
@@ -41,16 +40,20 @@ class MovieViewModel : ViewModel(){
         }
     }
 
-    val imdbId = movieRepository.movieId
+    val movieId = movieRepository.movieId
 
-    fun getImdbId(id : String){
+    fun getImdbId(id : String) : LiveData<String> {
+        val imdbId = MutableLiveData<String>()
         viewModelScope.launch {
             try {
-                movieRepository.getMovieImdbId(id)
+                movieRepository.fetchMovieImdbId(id)
+                imdbId.postValue(movieId.value.toString())
             } catch (error: MovieRepository.MovieRefreshError) {
                 logError(error)
             }
         }
+
+        return imdbId
     }
 
     fun logError(error : MovieRepository.MovieRefreshError){

@@ -19,8 +19,9 @@ class SubtitleViewModel : ViewModel() {
     val errorText: LiveData<String>
         get() = _errorText
 
-    // Function to fetch movie based on search value
+    // Function to fetch movie in coroutine
     fun fetchSubtitles(imdbId : String) {
+        Log.d("fetchSubtitles", imdbId)
         viewModelScope.launch {
             try {
                 subtitleRepository.getSubtitlesForMovie(imdbId)

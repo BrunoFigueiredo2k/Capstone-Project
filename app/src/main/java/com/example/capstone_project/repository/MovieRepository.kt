@@ -16,7 +16,7 @@ class MovieRepository {
     private val _movies: MutableLiveData<ArrayList<Movie>> = MutableLiveData()
 
     val movie: LiveData<ArrayList<Movie>>
-    get() = _movies
+        get() = _movies
 
     suspend fun fetchAllMovies(){
         try {
@@ -51,15 +51,13 @@ class MovieRepository {
     val movieId: LiveData<String>
         get() = _movieId
 
-    suspend fun getMovieImdbId(id : String) {
+    suspend fun fetchMovieImdbId(id : String) {
         try {
             //timeout the request after 5 seconds
             val result : MovieId = withTimeout(5_000) {
                 movieApiService.getMovieImdbId(id)
             }
 
-            // TODO: this log is working. Figure out how to return this to acticity
-            Log.d("imdb_id", result.imdbId)
             _movieId.value = result.imdbId
         } catch (error: Throwable) {
             throw MovieRefreshError("Unable to refresh movies", error)
