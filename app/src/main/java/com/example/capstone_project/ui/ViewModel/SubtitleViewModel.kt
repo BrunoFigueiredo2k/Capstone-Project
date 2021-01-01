@@ -21,7 +21,6 @@ class SubtitleViewModel : ViewModel() {
 
     // Function to fetch movie in coroutine
     fun fetchSubtitles(imdbId : String) {
-        Log.d("fetchSubtitles", imdbId)
         viewModelScope.launch {
             try {
                 subtitleRepository.getSubtitlesForMovie(imdbId)

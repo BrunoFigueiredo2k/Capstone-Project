@@ -41,6 +41,16 @@ class SubtitlesActivity : AppCompatActivity(){
         movieViewModel.movieId.observe(this, Observer {id ->
             fetchSubtitles(id)
         })
+        observeSubtitles()
+    }
+
+    private fun observeSubtitles(){
+        subtitleViewModel.downloads.observe(this, Observer {download ->
+            downloads.clear()
+            // TODO: fix error here
+            downloads.addAll(download)
+            subtitlesAdapter.notifyDataSetChanged()
+        })
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,9 +68,9 @@ class SubtitlesActivity : AppCompatActivity(){
         val movieId = movie?.id
         movieViewModel.getImdbId(movieId.toString())
 
-        observeMovieImdbId()
-
         initViews()
+
+        observeMovieImdbId()
     }
 
     // Fetch subtitles for passed movie based on imdb_id

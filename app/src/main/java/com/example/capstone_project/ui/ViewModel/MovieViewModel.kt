@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 
 class MovieViewModel : ViewModel(){
     private val movieRepository = MovieRepository()
+
     val movies = movieRepository.movie
 
     private val _errorText: MutableLiveData<String> = MutableLiveData()
