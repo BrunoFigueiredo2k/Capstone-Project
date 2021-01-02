@@ -18,11 +18,11 @@ class MovieRepository {
     val movie: LiveData<ArrayList<Movie>>
         get() = _movies
 
-    suspend fun fetchAllMovies(){
+    suspend fun fetchPopularMovies(){
         try {
             //timeout the request after 5 seconds
             val result : ResultSetWithMovies = withTimeout(5_000) {
-                movieApiService.fetchAllMovies()
+                movieApiService.fetchPopularMovies()
             }
 
             _movies.value = result.movies

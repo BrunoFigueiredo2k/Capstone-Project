@@ -39,7 +39,7 @@ class DownloadsAdapter(private val games: List<Download>) : RecyclerView.Adapter
             Glide.with(context).load(download.posterImgUrl).into(itemView.ivMoviePoster)
             itemView.tvMovieTitle.text = download.movieTitle
             itemView.tvMovieLanguage.text = download.language
-            itemView.tvMovieFile.text = download.fileName
+            itemView.tvMovieFile.text = download.files[0].fileName // TODO: check if this really gets the filename
             itemView.tvDownloadDate.text = "downloaded: " + printYearMonthDayFormat(download.downloadDate)
         }
     }
@@ -49,7 +49,6 @@ class DownloadsAdapter(private val games: List<Download>) : RecyclerView.Adapter
         val year: Int = date.get(Calendar.YEAR)
         val month: Int = date.get(Calendar.MONTH)
         val day: Int = date.get(Calendar.DAY_OF_WEEK)
-        val divider : String = "/"
 
         return "$day/$month/$year"
     }

@@ -37,7 +37,7 @@ class SubtitlesAdapter(private val downloads: List<Download>, private val onClic
         fun databind(download: Download) {
             Glide.with(context).load(download.getCountryFlag()).into(itemView.ivMoviePoster)
             itemView.tvMovieLanguage.text = download.language
-            itemView.tvMovieFile.text = download.fileName
+            itemView.tvMovieFile.text = download.files[0].fileName
         }
 
     }

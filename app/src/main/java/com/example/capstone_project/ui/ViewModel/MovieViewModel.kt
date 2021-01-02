@@ -22,7 +22,7 @@ class MovieViewModel : ViewModel(){
     fun fetchMovies() {
         viewModelScope.launch {
             try {
-                movieRepository.fetchAllMovies()
+                movieRepository.fetchPopularMovies()
             } catch (error: MovieRepository.MovieRefreshError) {
                 logError(error)
             }

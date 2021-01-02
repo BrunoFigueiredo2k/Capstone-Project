@@ -15,12 +15,12 @@ data class Download(
     var movieTitle: String,
 
     @ColumnInfo(name = "language")
-    @SerializedName("language") // TODO: new data from api
+    @SerializedName("language") // TODO: new data from opensubtitles api
     var language: String,
 
-    @ColumnInfo(name = "fileName")
-    @SerializedName("file_name") // TODO: new data from api
-    var fileName: String,
+    @ColumnInfo(name = "files")
+    @SerializedName("files") // TODO: new data from opensubtitles api
+    var files: List<Files>,
 
     @ColumnInfo(name = "imgUrl")
     var posterImgUrl: String,

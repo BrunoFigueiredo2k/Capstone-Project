@@ -18,7 +18,7 @@ interface MovieApiService {
 
     // GET request to fetch all popular movies
     @GET("/3/movie/popular?api_key=da007e76d36aca68e174f2948e09389c&language=en-US&page=1")
-    suspend fun fetchAllMovies() : ResultSetWithMovies
+    suspend fun fetchPopularMovies() : ResultSetWithMovies
 
     // Function to get poster image file name
     @GET("/3/movie/{id}/external_ids?api_key=da007e76d36aca68e174f2948e09389c")

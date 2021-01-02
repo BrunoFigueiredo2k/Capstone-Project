@@ -97,9 +97,10 @@ class SubtitlesActivity : AppCompatActivity(){
         }
 
         // TODO: downloadmanager accepts the download url, need to figure out what this url is in endpoint
-        val downloadFileUrl = download.fileName
+        val downloadFileUrl = download.files
 
-        startFileDownload(downloadFileUrl)
+        Log.d("file_name", downloadFileUrl[0].fileName)
+//        startFileDownload(downloadFileUrl[0].fileName) // TODO: Dont know if this works
     }
 
     private fun startFileDownload(url : String): Long{
