@@ -18,8 +18,9 @@ data class Movie (
 {
     // Function to get poster image file name
     fun getImageUrl() = "https://image.tmdb.org/t/p/w500${posterImg}"
-
-    // TODO: Remove since it's not the proper way to do this api call
-//    // Function to get poster image file name
-//    fun getMovieImdbId() = "https://api.themoviedb.org/3/movie/${id}/external_ids?api_key=da007e76d36aca68e174f2948e09389c"
 }
+// Class to save imdb_id from json response
+@Parcelize
+data class MovieId (
+    @SerializedName("imdb_id") var imdbId: String
+) : Parcelable

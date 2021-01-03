@@ -28,8 +28,10 @@ class SubtitleRepository {
                 subtitlesApiService.fetchMovieSubtitles(imdbId)
             }
 
+            println(result)
+            println(result.downloads)
             _downloads.value = result.downloads
-            Log.d("movies", result.toString())
+            Log.d("download", result.downloads.toString())
         } catch (error: Throwable) {
             throw MovieRefreshError("Unable to refresh movies", error)
         }

@@ -6,24 +6,28 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
+import kotlinx.android.parcel.RawValue
 import java.util.*
 
+// TODO: fix object mapping
 @Parcelize
 @Entity(tableName = "downloadsTable")
 data class Download(
-    @ColumnInfo(name = "movieTitle")
-    var movieTitle: String,
+    @ColumnInfo(name = "featureDetails")
+    @SerializedName("feature_details")
+    var featureDetails: @RawValue FeatureDetails,
 
-    @ColumnInfo(name = "language")
-    @SerializedName("language") // TODO: new data from opensubtitles api
-    var language: String,
+    @ColumnInfo(name = "attributes")
+    @SerializedName("attributes")
+    var attributes: @RawValue Attributes,
 
     @ColumnInfo(name = "files")
-    @SerializedName("files") // TODO: new data from opensubtitles api
+    @SerializedName("files")
     var files: List<Files>,
 
-    @ColumnInfo(name = "imgUrl")
-    var posterImgUrl: String,
+    @ColumnInfo(name = "relatedLinks")
+    @SerializedName("related_links")
+    var relatedLinks: @RawValue RelatedLinks,
 
     @ColumnInfo(name = "downloadDate")
     var downloadDate: Calendar,
@@ -32,7 +36,23 @@ data class Download(
     @ColumnInfo(name = "id")
     var id: Long? = null
 ) : Parcelable
-{
-    // Function to get backdrop image file name
-    fun getCountryFlag() = "https://www.countryflags.io/$language/flat/64.png"
-}
+
+@Parcelize
+data class FeatureDetails (
+    @SerializedName("title") var movieTitle: String
+) : Parcelable
+
+@Parcelize
+data class Attributes (
+    @SerializedName("language") var language: String
+) : Parcelable
+
+@Parcelize
+data class Files(
+    @SerializedName("file_name") var fileName: String
+) : Parcelable
+
+@Parcelize
+data class RelatedLinks (
+    @SerializedName("img_url") var posterImgUrl: String
+) : Parcelable

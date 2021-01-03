@@ -35,9 +35,6 @@ class MainActivity : AppCompatActivity() {
 
         viewPager.adapter = adapter
         tabs.setupWithViewPager(viewPager)
-
-        val currentFragment = adapter.getPageTitle(adapter.count - 1)
-        Toast.makeText(this, "Current Fragment: $currentFragment", LENGTH_LONG).show()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

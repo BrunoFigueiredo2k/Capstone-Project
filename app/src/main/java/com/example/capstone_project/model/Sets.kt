@@ -9,5 +9,5 @@ data class ResultSetWithMovies (
 
 // Arraylist of Download and Movie classes to match api endpoint data
 data class ResultSetWithDownloads (
-    @SerializedName("results") var downloads: ArrayList<Download>
+    @SerializedName("data") var downloads: ArrayList<Download>
 )
