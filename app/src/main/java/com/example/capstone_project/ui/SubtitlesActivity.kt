@@ -2,32 +2,31 @@ package com.example.capstone_project.ui
 
 import android.app.DownloadManager
 import android.content.Context
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
+import android.view.View
+import android.widget.TextView
 import android.widget.Toast
-import android.widget.Toast.LENGTH_LONG
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.capstone_project.R
 import com.example.capstone_project.model.Download
 import com.example.capstone_project.model.Movie
-import com.example.capstone_project.repository.MovieRepository
 import com.example.capstone_project.ui.ViewModel.MovieViewModel
 import com.example.capstone_project.ui.ViewModel.SubtitleViewModel
 import com.example.capstone_project.ui.adapter.SubtitlesAdapter
-import kotlinx.android.synthetic.main.activity_main.*
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_subtitles.*
-import kotlinx.android.synthetic.main.fragment_movies.*
-import kotlinx.android.synthetic.main.item_download.*
 import java.io.File
 
 class SubtitlesActivity : AppCompatActivity(){
+    val parentLayout = findViewById<View>(android.R.id.content)
     private val downloads = arrayListOf<Download>()
     private val subtitleViewModel: SubtitleViewModel by viewModels()
     private val movieViewModel : MovieViewModel by viewModels()
@@ -99,11 +98,11 @@ class SubtitlesActivity : AppCompatActivity(){
         // TODO: downloadmanager accepts the download url, need to figure out what this url is in endpoint
         val downloadFileUrl = download.files
 
-        Log.d("file_name", downloadFileUrl[0].fileName)
-//        startFileDownload(downloadFileUrl[0].fileName) // TODO: Dont know if this works
+        // TODO: filename is null check subtitlesadapter error
+        startFileDownload(downloadFileUrl[0].fileName, download)
     }
 
-    private fun startFileDownload(url : String): Long{
+    private fun startFileDownload(url : String, download: Download): Long{
         val extension = url?.substring(url.lastIndexOf("."))
         val downloadReference: Long
         var downloadManager: DownloadManager
@@ -120,9 +119,13 @@ class SubtitlesActivity : AppCompatActivity(){
 
         downloadReference = downloadManager?.enqueue(request) ?: 0
 
+        // TODO: check if this is correct place to call snackbar function
+        showSnackbarDownloaded("spiderman.srt", "Spiderman 3", parentLayout)
+
         return downloadReference
     }
 
+    // Setting up action bar with back arrow
     private fun setUpActionBar() {
         // set toolbar as support action bar
         // TODO: fix setting up toolbar
@@ -136,4 +139,18 @@ class SubtitlesActivity : AppCompatActivity(){
         }
     }
 
+    // Snackbar function to display snackbar telling user which file of what movie was downloaded
+    private fun showSnackbarDownloaded(fileName : String, movieTitle : String, view : View){
+        // Initialize snackbar message
+        val snackBar = Snackbar.make(view, "Downloaded $fileName ($movieTitle)",
+            Snackbar.LENGTH_LONG
+        ).setAction("Action", null)
+
+        // Set styling
+        snackBar.setActionTextColor(Color.WHITE)
+        val snackBarView = snackBar.view
+        val textView = snackBarView.findViewById(com.google.android.material.R.id.snackbar_text) as TextView
+        textView.setTextColor(Color.WHITE)
+        snackBar.show()
+    }
 }
