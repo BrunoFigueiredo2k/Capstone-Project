@@ -2,16 +2,17 @@ package com.example.capstone_project.ui.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
 import com.example.capstone_project.R
 import com.example.capstone_project.model.Download
-import com.example.capstone_project.ui.adapter.SubtitlesAdapter.*
 import kotlinx.android.synthetic.main.item_download.view.*
+
 
 class SubtitlesAdapter(private val downloads: List<Download>, private val onClick: (Download) -> Unit) :
     RecyclerView.Adapter<SubtitlesAdapter.ViewHolder>() {
