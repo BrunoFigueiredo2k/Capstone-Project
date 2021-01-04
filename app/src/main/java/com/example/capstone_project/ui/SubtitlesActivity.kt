@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import android.widget.Toast.LENGTH_LONG
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -23,28 +24,29 @@ import com.example.capstone_project.ui.ViewModel.SubtitleViewModel
 import com.example.capstone_project.ui.adapter.SubtitlesAdapter
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_subtitles.*
+import kotlinx.android.synthetic.main.item_download.*
 import java.io.File
 
-class SubtitlesActivity : AppCompatActivity(){
-    val parentLayout = findViewById<View>(android.R.id.content)
+class SubtitlesActivity : AppCompatActivity() {
     private val downloads = arrayListOf<Download>()
     private val subtitleViewModel: SubtitleViewModel by viewModels()
-    private val movieViewModel : MovieViewModel by viewModels()
+    private val movieViewModel: MovieViewModel by viewModels()
     private val subtitlesAdapter =
         SubtitlesAdapter(downloads) { download ->
-            onSubtitleDownloadClick(download)
+            Toast.makeText(this, "Clicked: ${download.id}", LENGTH_LONG).show()
+//            onSubtitleDownloadClick(download)
         }
 
     // Observe livedata String for imdbId and pass as param to fetch subtitles based on this id
-    private fun observeMovieImdbId(){
-        movieViewModel.movieId.observe(this, Observer {id ->
+    private fun observeMovieImdbId() {
+        movieViewModel.movieId.observe(this, Observer { id ->
             fetchSubtitles(id)
         })
         observeSubtitles()
     }
 
-    private fun observeSubtitles(){
-        subtitleViewModel.downloads.observe(this, Observer {download ->
+    private fun observeSubtitles() {
+        subtitleViewModel.downloads.observe(this, Observer { download ->
             downloads.clear()
             // TODO: fix error here
             downloads.addAll(download)
@@ -73,11 +75,11 @@ class SubtitlesActivity : AppCompatActivity(){
     }
 
     // Fetch subtitles for passed movie based on imdb_id
-    private fun fetchSubtitles(imdbId : String){
+    private fun fetchSubtitles(imdbId: String) {
         subtitleViewModel.fetchSubtitles(imdbId)
     }
 
-    fun initViews(){
+    fun initViews() {
         rvSubtitles.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rvSubtitles.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         rvSubtitles.adapter = subtitlesAdapter
@@ -99,10 +101,10 @@ class SubtitlesActivity : AppCompatActivity(){
         val downloadFileUrl = download.files
 
         // TODO: filename is null check subtitlesadapter error
-        startFileDownload(downloadFileUrl[0].fileName, download)
+//        startFileDownload(downloadFileUrl[0].fileName, download)
     }
 
-    private fun startFileDownload(url : String, download: Download): Long{
+    private fun startFileDownload(url: String, download: Download): Long {
         val extension = url?.substring(url.lastIndexOf("."))
         val downloadReference: Long
         var downloadManager: DownloadManager
@@ -120,6 +122,7 @@ class SubtitlesActivity : AppCompatActivity(){
         downloadReference = downloadManager?.enqueue(request) ?: 0
 
         // TODO: check if this is correct place to call snackbar function
+        val parentLayout = findViewById<View>(android.R.id.content)
         showSnackbarDownloaded("spiderman.srt", "Spiderman 3", parentLayout)
 
         return downloadReference
@@ -140,16 +143,18 @@ class SubtitlesActivity : AppCompatActivity(){
     }
 
     // Snackbar function to display snackbar telling user which file of what movie was downloaded
-    private fun showSnackbarDownloaded(fileName : String, movieTitle : String, view : View){
+    private fun showSnackbarDownloaded(fileName: String, movieTitle: String, view: View) {
         // Initialize snackbar message
-        val snackBar = Snackbar.make(view, "Downloaded $fileName ($movieTitle)",
+        val snackBar = Snackbar.make(
+            view, "Downloaded $fileName ($movieTitle)",
             Snackbar.LENGTH_LONG
         ).setAction("Action", null)
 
         // Set styling
         snackBar.setActionTextColor(Color.WHITE)
         val snackBarView = snackBar.view
-        val textView = snackBarView.findViewById(com.google.android.material.R.id.snackbar_text) as TextView
+        val textView =
+            snackBarView.findViewById(com.google.android.material.R.id.snackbar_text) as TextView
         textView.setTextColor(Color.WHITE)
         snackBar.show()
     }

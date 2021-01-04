@@ -46,6 +46,9 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
+    // JSONOBJECT for parsing languages.json
+    implementation 'org.json:json:20200518'
+
     // Room
     def fragment_version = "1.3.0-alpha06"
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
