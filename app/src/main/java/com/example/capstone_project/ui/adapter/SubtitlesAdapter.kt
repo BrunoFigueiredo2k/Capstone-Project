@@ -47,38 +47,33 @@ class SubtitlesAdapter(private val downloads: List<Download>, private val onClic
             // Pass flag that's been returned through the determineLanguage flag converter. This is
             // done to convert to language value that's returned from the api to the corresponding country
             Glide.with(context).load(getCountryFlag(determineLanguageFlag(download.attributes.language))).into(itemView.ivMoviePoster)
-            itemView.tvMovieLanguage.text = download.attributes.language
 
-            // TODO: put this in itemView tvMovieLanguage (return value will be langauge name
-            getLanguageNameJson(download.attributes.language)
+            // Gets the language name instead of code and sets it to the textview
+            itemView.tvMovieLanguage.text = getLanguageNameJson(download.attributes.language)
 
-//            itemView.tvMovieFile.text = download.files[0].fileName // TODO: fix setting the filename from the list. error: nullpointer
+            // TODO: fix setting the filename from the list. error: nullpointer
+//            itemView.tvMovieFile.text = download.files[0].fileName
         }
     }
 
+    // Function to convert language code into language name from languages.json file in assets folder
     private fun getLanguageNameJson(languageCode : String) : String{
         val gson = Gson()
         val jsonfile: String = context.assets.open("languages.json").bufferedReader().use {it.readText()}
         val json = JSONObject(jsonfile).toString()
-        Log.d("json", json)
 
+        // Convert json string of file to Model (Languages)
         val languages = gson.fromJson(json, Languages::class.java)
-        val code = languages.languages[0].code
-//        val name = languages.languages[0].name
-        val lengthArray : Int = languages.languages.size
 
-        // TODO: fix this
+        // Loop through all languages and whenever iteration language code matches the code passed
+        // from Download class then return the language name
+        lateinit var languageName : String
         for (i in languages.languages.indices){
-            val nameLanguage = languages.languages[i].name
-            if (languages.languages[i].code === languageCode){
-                Log.d("languageName", nameLanguage)
+            if (languageCode == languages.languages[i].code){
+                languageName = languages.languages[i].name
             }
         }
-//        Log.d("json", "$code - $name")
-        Log.d("json", lengthArray.toString())
-
-        // TODO: return languages object
-        return ""
+        return languageName
     }
 
     // Get country flag from flags api url
