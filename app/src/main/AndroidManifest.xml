@@ -24,7 +24,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.SubtitlesActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme"
+            android:label="@string/title_download_subs"
+            android:parentActivityName=".ui.MainActivity"/>
     </application>
 
 </manifest>

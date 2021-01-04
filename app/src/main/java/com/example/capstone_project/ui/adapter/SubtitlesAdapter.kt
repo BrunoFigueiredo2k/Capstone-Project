@@ -67,7 +67,7 @@ class SubtitlesAdapter(private val downloads: List<Download>, private val onClic
 
         // Loop through all languages and whenever iteration language code matches the code passed
         // from Download class then return the language name
-        lateinit var languageName : String
+        var languageName = ""
         for (i in languages.languages.indices){
             if (languageCode == languages.languages[i].code){
                 languageName = languages.languages[i].name

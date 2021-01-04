@@ -2,6 +2,7 @@ package com.example.capstone_project.ui
 
 import android.app.DownloadManager
 import android.content.Context
+import android.database.DataSetObserver
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
@@ -16,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.capstone_project.R
 import com.example.capstone_project.model.Download
 import com.example.capstone_project.model.Movie
@@ -24,8 +26,8 @@ import com.example.capstone_project.ui.ViewModel.SubtitleViewModel
 import com.example.capstone_project.ui.adapter.SubtitlesAdapter
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_subtitles.*
-import kotlinx.android.synthetic.main.item_download.*
 import java.io.File
+
 
 class SubtitlesActivity : AppCompatActivity() {
     private val downloads = arrayListOf<Download>()
@@ -34,8 +36,21 @@ class SubtitlesActivity : AppCompatActivity() {
     private val subtitlesAdapter =
         SubtitlesAdapter(downloads) { download ->
             Toast.makeText(this, "Clicked: ${download.id}", LENGTH_LONG).show()
+            Log.d("clickicon", "Clicked: $download")
+
+            callClickListener(download)
+            // TODO: uncomment when function is fully working
 //            onSubtitleDownloadClick(download)
         }
+
+    private fun callClickListener(download: Download){
+        subtitlesAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver(){
+            override fun onChanged() {
+                Toast.makeText(applicationContext, "Clicked: ${download.id}", LENGTH_LONG).show()
+                Log.d("clickicon", "Clicked: $download")
+            }
+        })
+    }
 
     // Observe livedata String for imdbId and pass as param to fetch subtitles based on this id
     private fun observeMovieImdbId() {
@@ -48,7 +63,6 @@ class SubtitlesActivity : AppCompatActivity() {
     private fun observeSubtitles() {
         subtitleViewModel.downloads.observe(this, Observer { download ->
             downloads.clear()
-            // TODO: fix error here
             downloads.addAll(download)
             subtitlesAdapter.notifyDataSetChanged()
         })
@@ -130,12 +144,7 @@ class SubtitlesActivity : AppCompatActivity() {
 
     // Setting up action bar with back arrow
     private fun setUpActionBar() {
-        // set toolbar as support action bar
-        // TODO: fix setting up toolbar
-        setSupportActionBar(findViewById(R.id.toolbar))
-
         supportActionBar?.apply {
-            title = R.string.title_download_subs.toString()
             // show back button on toolbar on back button press, it will navigate to movies activity
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
