@@ -35,6 +35,13 @@ class MovieFragment : Fragment() {
         })
     }
 
+    // TODO: returns null atm need to fix
+    private fun observeGenres() {
+        viewModel.genres.observe(viewLifecycleOwner, Observer {
+            fetchMovieGenreNames()
+        })
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -64,6 +71,9 @@ class MovieFragment : Fragment() {
         initViews()
 
         observeMovies()
+        observeGenres()
+
+        Log.d("genres", viewModel.genres.value.toString())
     }
 
     // Initialize views (adapter/recyclerview)
@@ -76,6 +86,13 @@ class MovieFragment : Fragment() {
     // Fetch all popular movies when activity is loaded
     private fun fetchMovies(){
         viewModel.fetchMovies()
+    }
+
+    // TODO: returns null atm need to fix observer
+    // Fetch subtitles for passed movie based on imdb_id
+    private fun fetchMovieGenreNames() {
+        val genres = viewModel.getGenreNames()
+        Log.d("genres", genres.toString())
     }
 
     // Function to fetch movies from API with movie title search value as param

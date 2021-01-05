@@ -4,6 +4,7 @@ import android.R
 import android.annotation.SuppressLint
 import android.content.Context
 import com.example.capstone_project.model.MovieId
+import com.example.capstone_project.model.ResultSetWithGenres
 import com.example.capstone_project.model.ResultSetWithMovies
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -25,4 +26,8 @@ interface MovieApiService {
     suspend fun getMovieImdbId(
         @Path("id") id : String
     ) : MovieId
+
+    // GET request to fetch all popular movies
+    @GET("/3/genre/movie/list?api_key=da007e76d36aca68e174f2948e09389c&language=en-US")
+    suspend fun getGenreNames() : ResultSetWithGenres
 }

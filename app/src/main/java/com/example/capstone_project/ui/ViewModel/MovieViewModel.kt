@@ -12,6 +12,8 @@ class MovieViewModel : ViewModel(){
     private val movieRepository = MovieRepository()
 
     val movies = movieRepository.movie
+    val movieId = movieRepository.movieId
+    val genres = movieRepository.genre
 
     private val _errorText: MutableLiveData<String> = MutableLiveData()
 
@@ -41,8 +43,6 @@ class MovieViewModel : ViewModel(){
         }
     }
 
-    val movieId = movieRepository.movieId
-
     fun getImdbId(id : String) : LiveData<String> {
         val imdbId = MutableLiveData<String>()
         viewModelScope.launch {
@@ -55,6 +55,17 @@ class MovieViewModel : ViewModel(){
         }
 
         return imdbId
+    }
+
+    // Function to fetch all genre names
+    fun getGenreNames() {
+        viewModelScope.launch {
+            try {
+                movieRepository.getGenreNames()
+            } catch (error: MovieRepository.MovieRefreshError) {
+                logError(error)
+            }
+        }
     }
 
     fun logError(error : MovieRepository.MovieRefreshError){

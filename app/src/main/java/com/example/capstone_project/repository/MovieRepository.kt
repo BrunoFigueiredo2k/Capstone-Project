@@ -4,9 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.capstone_project.interfaces.MovieApiService
-import com.example.capstone_project.model.Movie
-import com.example.capstone_project.model.MovieId
-import com.example.capstone_project.model.ResultSetWithMovies
+import com.example.capstone_project.model.*
 import com.example.capstone_project.ui.api.MovieApi
 import kotlinx.coroutines.withTimeout
 
@@ -26,7 +24,6 @@ class MovieRepository {
             }
 
             _movies.value = result.movies
-            Log.d("movies", result.toString())
         } catch (error: Throwable) {
             throw MovieRefreshError("Unable to refresh movies", error)
         }
@@ -40,7 +37,6 @@ class MovieRepository {
             }
 
             _movies.value = result.movies
-            Log.d("movies", result.toString())
         } catch (error: Throwable) {
             throw MovieRefreshError("Unable to refresh movies", error)
         }
@@ -59,6 +55,24 @@ class MovieRepository {
             }
 
             _movieId.value = result.imdbId
+        } catch (error: Throwable) {
+            throw MovieRefreshError("Unable to refresh movies", error)
+        }
+    }
+
+    private val _genres: MutableLiveData<ArrayList<Genre>> = MutableLiveData()
+
+    val genre: LiveData<ArrayList<Genre>>
+        get() = _genres
+
+    suspend fun getGenreNames(){
+        try {
+            //timeout the request after 5 seconds
+            val result : ResultSetWithGenres = withTimeout(5_000) {
+                movieApiService.getGenreNames()
+            }
+
+            _genres.value = result.genres
         } catch (error: Throwable) {
             throw MovieRefreshError("Unable to refresh movies", error)
         }

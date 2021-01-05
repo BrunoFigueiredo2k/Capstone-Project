@@ -1,7 +1,6 @@
 package com.example.capstone_project.interfaces
 
 import android.content.Context
-import com.google.gson.Gson
 import org.json.JSONObject
 
 interface GetJson {

@@ -11,3 +11,7 @@ data class ResultSetWithMovies (
 data class ResultSetWithDownloads (
     @SerializedName("data") var downloads: ArrayList<Download>
 )
+
+data class ResultSetWithGenres (
+    @SerializedName("genres") var genres: ArrayList<Genre>
+)
