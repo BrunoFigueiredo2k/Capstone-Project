@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.example.capstone_project.R
+import com.example.capstone_project.interfaces.GetJson
+import com.example.capstone_project.model.Countries
 import com.example.capstone_project.model.Download
 import com.example.capstone_project.model.Language
 import com.example.capstone_project.model.Languages
@@ -21,7 +23,7 @@ import java.io.FileReader
 
 
 class SubtitlesAdapter(private val downloads: List<Download>, private val onClick: (Download) -> Unit) :
-    RecyclerView.Adapter<SubtitlesAdapter.ViewHolder>() {
+    RecyclerView.Adapter<SubtitlesAdapter.ViewHolder>(), GetJson {
 
     private lateinit var context: Context
 
@@ -46,7 +48,7 @@ class SubtitlesAdapter(private val downloads: List<Download>, private val onClic
         fun databind(download: Download) {
             // Pass flag that's been returned through the determineLanguage flag converter. This is
             // done to convert to language value that's returned from the api to the corresponding country
-            Glide.with(context).load(getCountryFlag(determineLanguageFlag(download.attributes.language))).into(itemView.ivMoviePoster)
+            Glide.with(context).load(getCountryFlag(convertLanguageToCountryCode(download.attributes.language))).into(itemView.ivMoviePoster)
 
             // Gets the language name instead of code and sets it to the textview
             itemView.tvMovieLanguage.text = getLanguageNameJson(download.attributes.language)
@@ -56,11 +58,11 @@ class SubtitlesAdapter(private val downloads: List<Download>, private val onClic
         }
     }
 
+    val gson = Gson()
+
     // Function to convert language code into language name from languages.json file in assets folder
-    private fun getLanguageNameJson(languageCode : String) : String{
-        val gson = Gson()
-        val jsonfile: String = context.assets.open("languages.json").bufferedReader().use {it.readText()}
-        val json = JSONObject(jsonfile).toString()
+    private fun getLanguageNameJson(languageCode : String) : String {
+        val json = getJson("languages.json", context)
 
         // Convert json string of file to Model (Languages)
         val languages = gson.fromJson(json, Languages::class.java)
@@ -82,15 +84,37 @@ class SubtitlesAdapter(private val downloads: List<Download>, private val onClic
     }
 
     // Determine the flag/country of the language that's returned from the api
-    private fun determineLanguageFlag(language : String) : String{
-        var returnLanguage = language
-        when (language){
-            "en" -> returnLanguage = "gb"
-            "pt-BR" -> returnLanguage = "br"
-            "pt-PT" -> returnLanguage = "pt"
-            "ko" -> returnLanguage = "kr"
-            "ja" -> returnLanguage = "jp"
+    private fun convertLanguageToCountryCode(language : String) : String{
+        // Get countries from json file and convert from json to model
+        val jsonCountries = getJson("countries.json", context)
+        val countriesObj = gson.fromJson(jsonCountries, Countries::class.java)
+
+        var returnCountryCode = language
+        // Loop through countries object with language and country code and if the passed language
+        // is equal to the language then pass the country code of that index
+        for (i in countriesObj.countries.indices) {
+            when (language) {
+                // First check the main countries, because there are many countries that speak
+                // these languages but should be the original country's flag
+                "en" -> returnCountryCode = "gb"
+                "pt-BR" -> returnCountryCode = "br"
+                "pt-PT" -> returnCountryCode = "pt"
+                "fr" -> returnCountryCode = "fr"
+                "es" -> returnCountryCode = "es"
+                "de" -> returnCountryCode = "de"
+                "sr" -> returnCountryCode = "rs"
+                "ms" -> returnCountryCode = "my"
+                "he" -> returnCountryCode = "il"
+                "sl" -> returnCountryCode = "si"
+                "bs" -> returnCountryCode = "ba"
+                "ar" -> returnCountryCode = "sa"
+                "da" -> returnCountryCode = "dk"
+                "cs" -> returnCountryCode = "cz"
+                // Check all others
+                countriesObj.countries[i].languageCode -> returnCountryCode = countriesObj.countries[i].countryCode
+            }
         }
-        return returnLanguage
+
+        return returnCountryCode
     }
 }

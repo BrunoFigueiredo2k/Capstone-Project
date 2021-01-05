@@ -2,7 +2,6 @@ package com.example.capstone_project.ui
 
 import android.app.DownloadManager
 import android.content.Context
-import android.database.DataSetObserver
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
@@ -28,13 +27,13 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_subtitles.*
 import java.io.File
 
-
 class SubtitlesActivity : AppCompatActivity() {
     private val downloads = arrayListOf<Download>()
     private val subtitleViewModel: SubtitleViewModel by viewModels()
     private val movieViewModel: MovieViewModel by viewModels()
     private val subtitlesAdapter =
         SubtitlesAdapter(downloads) { download ->
+            // TODO: download is null because this is the download from db instead of download from recyclerview list
             Toast.makeText(this, "Clicked: ${download.id}", LENGTH_LONG).show()
             Log.d("clickicon", "Clicked: $download")
 
@@ -152,6 +151,7 @@ class SubtitlesActivity : AppCompatActivity() {
     }
 
     // Snackbar function to display snackbar telling user which file of what movie was downloaded
+    //TODO: value of download parameters are from db instead of recyclerview (FIX THIS)
     private fun showSnackbarDownloaded(fileName: String, movieTitle: String, view: View) {
         // Initialize snackbar message
         val snackBar = Snackbar.make(
