@@ -12,6 +12,7 @@ data class ResultSetWithDownloads (
     @SerializedName("data") var downloads: ArrayList<Download>
 )
 
+// Arraylist of Genres in json response
 data class ResultSetWithGenres (
     @SerializedName("genres") var genres: ArrayList<Genre>
 )

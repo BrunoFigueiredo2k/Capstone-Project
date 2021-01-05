@@ -9,7 +9,6 @@ import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
 import java.util.*
 
-// TODO: fix object mapping
 @Parcelize
 @Entity(tableName = "downloadsTable")
 data class Download(

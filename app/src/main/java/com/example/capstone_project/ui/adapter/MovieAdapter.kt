@@ -50,14 +50,32 @@ class MovieAdapter(private val movies: List<Movie>, private val onClick: (Movie)
         }
     }
 
+    // TODO: fix this function
+    // Converts genre ids array passed to the corresponding genre names from TMDB
     fun convertGenreIdsToName(ids : ArrayList<Int>) : String {
-        var genres = arrayListOf<String>()
+        val genresIds = arrayListOf<Int>() // TODO: get viewmodel data from MovieApiService
+        val genreNames = arrayListOf<String>() // TODO: get viewmodel data from MovieApiService
+        var returnGenreNames = ""
 
-        val genreNames = ""
+        // Loop through each ids of spefific movie
+        for (i in ids.indices){
+            // Loop through all genreIds in response from api and check if it equals the passed id index
+            for (j in genreNames.indices){
+                // If passed id index is equal to genre id in object
+                if (ids[j] == genresIds[j]){
+                    // Add the genre to the empty return string with a comma if it's not the last one
+                    if (j == (genreNames.size - 1)){
+                        returnGenreNames += genreNames[j]
+                    } else {
+                        returnGenreNames += genreNames[j] + ", "
+                    }
+                }
+            }
+        }
 
         Log.d("genreNames", genreNames.toString())
 
         // TODO: return concatenated genres here
-        return ""
+        return returnGenreNames
     }
 }

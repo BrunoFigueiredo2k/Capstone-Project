@@ -23,12 +23,10 @@ class DownloadsAdapter(private val games: List<Download>) : RecyclerView.Adapter
         )
     }
 
-    /** Returns the size of the list */
     override fun getItemCount(): Int {
         return games.size
     }
 
-    /** Called by RecyclerView to display the data at the specified position. */
     override fun onBindViewHolder(holder: ViewHolder, position: Int){
         holder.databind(games[position])
     }

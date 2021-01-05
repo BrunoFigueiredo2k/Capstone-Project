@@ -21,13 +21,13 @@ interface MovieApiService {
     @GET("/3/movie/popular?api_key=da007e76d36aca68e174f2948e09389c&language=en-US&page=1")
     suspend fun fetchPopularMovies() : ResultSetWithMovies
 
-    // Function to get poster image file name
+    // Function to get movie imdb id
     @GET("/3/movie/{id}/external_ids?api_key=da007e76d36aca68e174f2948e09389c")
     suspend fun getMovieImdbId(
         @Path("id") id : String
     ) : MovieId
 
-    // GET request to fetch all popular movies
+    // GET request to fetch genres with names with corresponding ids
     @GET("/3/genre/movie/list?api_key=da007e76d36aca68e174f2948e09389c&language=en-US")
     suspend fun getGenreNames() : ResultSetWithGenres
 }
