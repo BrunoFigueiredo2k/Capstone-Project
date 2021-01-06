@@ -11,29 +11,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 
-class DateConverter {
+class Converters {
+    /** CONVERTER FOR DATE CLASS **/
     @TypeConverter
-    fun fromTimestamp(value: Long?): Calendar? = value?.let { value ->
-        GregorianCalendar().also { calendar ->
-            calendar.timeInMillis = value
-        }
+    fun fromTimestamp(value: Long?): Date? {
+        return value?.let { Date(it) }
     }
 
     @TypeConverter
-    fun dateToTimestamp(timestamp: Calendar?): Long? = timestamp?.timeInMillis
-}
+    fun dateToTimestamp(date: Date?): Long? {
+        return date?.time?.toLong()
+    }
 
-// Type converter for saving Files arraylist in db
-class ArrayListConverter {
-    @TypeConverter
-    fun listToJson(value: List<File>?) = Gson().toJson(value)
-
-    @TypeConverter
-    fun jsonToList(value: String) = Gson().fromJson(value, Array<File>::class.java).toList()
-}
-
-// Type converter for class Attributes (Download)
-class AttributesConverter{
+    /** CONVERTER FOR ATTRIBUTES CLASS **/
     @TypeConverter
     fun fromAttributes(value : Attributes):String{
         return value.toString()
@@ -47,16 +37,13 @@ class AttributesConverter{
 }
 
 @Database(entities = [Download::class], version = 1, exportSchema = false)
-@TypeConverters(DateConverter::class, ArrayListConverter::class, AttributesConverter::class)
+@TypeConverters(Converters::class)
 abstract class DownloadsRoomDatabase : RoomDatabase() {
 
     abstract fun downloadDao(): DownloadDao
 
     companion object {
         private const val DATABASE_NAME = "DOWNLOADS_DATABASE"
-
-        // TODO: Remove this afterwards (dummy data)
-        val attributes = Attributes("en", FeatureDetails("Spiderman"), arrayListOf(File("test.srt")), RelatedLinks("https://s9.osdb.link/features/5/4/4/650445.jpg"))
 
         @Volatile
         private var INSTANCE: DownloadsRoomDatabase? = null
@@ -70,18 +57,6 @@ abstract class DownloadsRoomDatabase : RoomDatabase() {
                             DownloadsRoomDatabase::class.java, DATABASE_NAME
                         )
                             .fallbackToDestructiveMigration()
-                            .addCallback(object : RoomDatabase.Callback() {
-                                override fun onCreate(db: SupportSQLiteDatabase) {
-                                    super.onCreate(db)
-                                    INSTANCE?.let { database ->
-                                        CoroutineScope(Dispatchers.IO).launch {
-                                            // TODO: check if this works
-                                            database.downloadDao().insertDownload(Download(attributes , Calendar.getInstance()))
-                                        }
-                                    }
-                                }
-                            })
-
                             .build()
                     }
                 }

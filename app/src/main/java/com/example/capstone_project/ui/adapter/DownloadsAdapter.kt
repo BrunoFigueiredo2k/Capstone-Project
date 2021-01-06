@@ -2,6 +2,7 @@ package com.example.capstone_project.ui.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.example.capstone_project.R
 import com.example.capstone_project.model.Download
 import kotlinx.android.synthetic.main.item_downloaded.view.*
+import java.text.SimpleDateFormat
 import java.util.*
 
 class DownloadsAdapter(private val games: List<Download>) : RecyclerView.Adapter<DownloadsAdapter.ViewHolder>() {
@@ -43,11 +45,9 @@ class DownloadsAdapter(private val games: List<Download>) : RecyclerView.Adapter
     }
 
     // Function to format Date type to DD/MM/YYYY
-    private fun printYearMonthDayFormat(date : Calendar): String {
-        val year: Int = date.get(Calendar.YEAR)
-        val month: Int = date.get(Calendar.MONTH)
-        val day: Int = date.get(Calendar.DAY_OF_WEEK)
-
-        return "$day/$month/$year"
+    @SuppressLint("SimpleDateFormat")
+    private fun printYearMonthDayFormat(date : Date): String {
+        val format = SimpleDateFormat("dd/MM/yyy")
+        return format.format(date)
     }
 }

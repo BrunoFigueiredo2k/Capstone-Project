@@ -1,8 +1,8 @@
 package com.example.capstone_project.repository
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.capstone_project.dao.DownloadDao
 import com.example.capstone_project.database.DownloadsRoomDatabase
 import com.example.capstone_project.model.Download
@@ -16,10 +16,11 @@ class DownloadRepository(context: Context) {
     }
 
     fun getAllDownloads() : LiveData<List<Download>> {
-        return downloadDao?.getAllDownloads() ?: MutableLiveData(emptyList())
+        return downloadDao.getAllDownloads()
     }
 
     suspend fun insertDownload(download: Download) {
+        Log.d("date", download.downloadDate.toString())
         downloadDao.insertDownload(download)
     }
 }

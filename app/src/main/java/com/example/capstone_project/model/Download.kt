@@ -4,8 +4,6 @@ import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverter
-import com.example.capstone_project.database.ArrayListConverter
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
@@ -19,16 +17,11 @@ data class Download(
     var attributes: Attributes,
 
     @ColumnInfo(name = "downloadDate")
-    var downloadDate: Calendar,
+    var downloadDate: Date,
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     var id: Long? = null
-) : Parcelable
-
-@Parcelize
-data class FeatureDetails (
-    @SerializedName("title") var movieTitle: String
 ) : Parcelable
 
 @Parcelize
@@ -43,6 +36,11 @@ data class Attributes (
 
     @SerializedName("related_links")
     var relatedLinks: RelatedLinks
+) : Parcelable
+
+@Parcelize
+data class FeatureDetails (
+    @SerializedName("title") var movieTitle: String
 ) : Parcelable
 
 @Parcelize
