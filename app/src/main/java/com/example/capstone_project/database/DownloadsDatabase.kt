@@ -26,23 +26,10 @@ class DateConverter {
 // Type converter for saving Files arraylist in db
 class ArrayListConverter {
     @TypeConverter
-    fun listToJson(value: List<Files>?) = Gson().toJson(value)
+    fun listToJson(value: List<File>?) = Gson().toJson(value)
 
     @TypeConverter
-    fun jsonToList(value: String) = Gson().fromJson(value, Array<Files>::class.java).toList()
-}
-
-// Type converter for class FeatureDetails (Download)
-class FeatureDetailsConverter{
-    @TypeConverter
-    fun fromFeatureDetails(value : FeatureDetails):String{
-        return value.toString()
-    }
-
-    @TypeConverter
-    fun toFeatureDetails(value:String) : FeatureDetails{
-        return FeatureDetails(value)
-    }
+    fun jsonToList(value: String) = Gson().fromJson(value, Array<File>::class.java).toList()
 }
 
 // Type converter for class Attributes (Download)
@@ -54,25 +41,13 @@ class AttributesConverter{
 
     @TypeConverter
     fun toAttributes(value:String) : Attributes{
-        return Attributes(value)
-    }
-}
-
-// Type converter for class RelatedLinks (Download)
-class RelatedLinksConverter{
-    @TypeConverter
-    fun fromRelatedLinks(value : RelatedLinks):String{
-        return value.toString()
-    }
-
-    @TypeConverter
-    fun toRelatedLinks(value:String) : RelatedLinks{
-        return RelatedLinks(value)
+        //TODO: DONT KNOW IF THIS WORKS!!
+        return Attributes(value, FeatureDetails(value), arrayListOf(File(value)), RelatedLinks(value))
     }
 }
 
 @Database(entities = [Download::class], version = 1, exportSchema = false)
-@TypeConverters(DateConverter::class, ArrayListConverter::class, FeatureDetailsConverter::class, AttributesConverter::class, RelatedLinksConverter::class)
+@TypeConverters(DateConverter::class, ArrayListConverter::class, AttributesConverter::class)
 abstract class DownloadsRoomDatabase : RoomDatabase() {
 
     abstract fun downloadDao(): DownloadDao
@@ -80,12 +55,8 @@ abstract class DownloadsRoomDatabase : RoomDatabase() {
     companion object {
         private const val DATABASE_NAME = "DOWNLOADS_DATABASE"
 
-        val file = Files("hello.srt")
-        val files = arrayListOf(file)
-
-        val featureDetails = FeatureDetails("Spiderman")
-        val attributes = Attributes("en")
-        val relatedLinks = RelatedLinks("https://s9.osdb.link/features/5/4/4/650445.jpg")
+        // TODO: Remove this afterwards (dummy data)
+        val attributes = Attributes("en", FeatureDetails("Spiderman"), arrayListOf(File("test.srt")), RelatedLinks("https://s9.osdb.link/features/5/4/4/650445.jpg"))
 
         @Volatile
         private var INSTANCE: DownloadsRoomDatabase? = null
@@ -105,7 +76,7 @@ abstract class DownloadsRoomDatabase : RoomDatabase() {
                                     INSTANCE?.let { database ->
                                         CoroutineScope(Dispatchers.IO).launch {
                                             // TODO: check if this works
-                                            database.downloadDao().insertDownload(Download( featureDetails, attributes, files, relatedLinks, Calendar.getInstance()))
+                                            database.downloadDao().insertDownload(Download(attributes , Calendar.getInstance()))
                                         }
                                     }
                                 }

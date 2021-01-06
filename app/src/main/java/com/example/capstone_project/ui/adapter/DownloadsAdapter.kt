@@ -34,10 +34,10 @@ class DownloadsAdapter(private val games: List<Download>) : RecyclerView.Adapter
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         @SuppressLint("SetTextI18n")
         fun databind(download: Download) {
-            Glide.with(context).load(download.relatedLinks.posterImgUrl).into(itemView.ivMoviePoster)
-            itemView.tvMovieTitle.text = download.featureDetails.movieTitle
+            Glide.with(context).load(download.attributes.relatedLinks.posterImgUrl).into(itemView.ivMoviePoster)
+            itemView.tvMovieTitle.text = download.attributes.featureDetails.movieTitle
             itemView.tvMovieLanguage.text = download.attributes.language
-            itemView.tvMovieFile.text = download.files[0].fileName // TODO: check if this really gets the filename
+            itemView.tvMovieFile.text = download.attributes.files[0].fileName
             itemView.tvDownloadDate.text = "downloaded: " + printYearMonthDayFormat(download.downloadDate)
         }
     }

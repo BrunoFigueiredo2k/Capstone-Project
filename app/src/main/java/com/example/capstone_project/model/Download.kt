@@ -4,6 +4,8 @@ import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverter
+import com.example.capstone_project.database.ArrayListConverter
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
@@ -12,21 +14,9 @@ import java.util.*
 @Parcelize
 @Entity(tableName = "downloadsTable")
 data class Download(
-    @ColumnInfo(name = "featureDetails")
-    @SerializedName("feature_details")
-    var featureDetails: @RawValue FeatureDetails,
-
     @ColumnInfo(name = "attributes")
     @SerializedName("attributes")
-    var attributes: @RawValue Attributes,
-
-    @ColumnInfo(name = "files")
-    @SerializedName("files")
-    var files: List<Files>,
-
-    @ColumnInfo(name = "relatedLinks")
-    @SerializedName("related_links")
-    var relatedLinks: @RawValue RelatedLinks,
+    var attributes: Attributes,
 
     @ColumnInfo(name = "downloadDate")
     var downloadDate: Calendar,
@@ -43,11 +33,20 @@ data class FeatureDetails (
 
 @Parcelize
 data class Attributes (
-    @SerializedName("language") var language: String
+    @SerializedName("language") var language: String,
+
+    @SerializedName("feature_details")
+    var featureDetails: FeatureDetails,
+
+    @SerializedName("files")
+    var files: List<File>,
+
+    @SerializedName("related_links")
+    var relatedLinks: RelatedLinks
 ) : Parcelable
 
 @Parcelize
-data class Files(
+data class File(
     @SerializedName("file_name") var fileName: String
 ) : Parcelable
 

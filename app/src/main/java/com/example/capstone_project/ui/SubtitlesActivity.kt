@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.capstone_project.R
 import com.example.capstone_project.model.Download
 import com.example.capstone_project.model.Movie
+import com.example.capstone_project.ui.ViewModel.DownloadViewModel
 import com.example.capstone_project.ui.ViewModel.MovieViewModel
 import com.example.capstone_project.ui.ViewModel.SubtitleViewModel
 import com.example.capstone_project.ui.adapter.SubtitlesAdapter
@@ -28,35 +29,34 @@ import kotlinx.android.synthetic.main.activity_subtitles.*
 import java.io.File
 
 class SubtitlesActivity : AppCompatActivity() {
-    private val downloads = arrayListOf<Download>()
     private val subtitleViewModel: SubtitleViewModel by viewModels()
+    private val downloadViewModel: DownloadViewModel by viewModels()
     private val movieViewModel: MovieViewModel by viewModels()
+    private val downloads = arrayListOf<Download>()
     private val subtitlesAdapter =
         SubtitlesAdapter(downloads) { download ->
             // TODO: download is null because this is the download from db instead of download from recyclerview list
             Toast.makeText(this, "Clicked: ${download.id}", LENGTH_LONG).show()
             Log.d("clickicon", "Clicked: $download")
 
-            callClickListener(download)
             // TODO: uncomment when function is fully working
-//            onSubtitleDownloadClick(download)
+            onSubtitleDownloadClick(download)
         }
 
-    private fun callClickListener(download: Download){
-        subtitlesAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver(){
-            override fun onChanged() {
-                Toast.makeText(applicationContext, "Clicked: ${download.id}", LENGTH_LONG).show()
-                Log.d("clickicon", "Clicked: $download")
-            }
-        })
-    }
+//    private fun callClickListener(download: Download){
+//        subtitlesAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver(){
+//            override fun onChanged() {
+//                Toast.makeText(applicationContext, "Clicked: ${download.id}", LENGTH_LONG).show()
+//                Log.d("clickicon", "Clicked: $download")
+//            }
+//        })
+//    }
 
     // Observe livedata String for imdbId and pass as param to fetch subtitles based on this id
     private fun observeMovieImdbId() {
         movieViewModel.movieId.observe(this, Observer { id ->
             fetchSubtitles(id)
         })
-        observeSubtitles()
     }
 
     private fun observeSubtitles() {
@@ -85,6 +85,7 @@ class SubtitlesActivity : AppCompatActivity() {
         initViews()
 
         observeMovieImdbId()
+        observeSubtitles()
     }
 
     // Fetch subtitles for passed movie based on imdb_id
@@ -111,34 +112,37 @@ class SubtitlesActivity : AppCompatActivity() {
         }
 
         // TODO: downloadmanager accepts the download url, need to figure out what this url is in endpoint
-        val downloadFileUrl = download.files
+        val downloadFileUrl = download.attributes.files[0].fileName
 
         // TODO: filename is null check subtitlesadapter error
 //        startFileDownload(downloadFileUrl[0].fileName, download)
+        startFileDownload(download)
     }
 
-    private fun startFileDownload(url: String, download: Download): Long {
-        val extension = url?.substring(url.lastIndexOf("."))
-        val downloadReference: Long
-        var downloadManager: DownloadManager
-        downloadManager = this.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-        val uri = Uri.parse(url)
-        val request = DownloadManager.Request(uri)
-        request.setDestinationInExternalPublicDir(
-            "/", // TODO: not sure about this param
-            "srt" + System.currentTimeMillis() + extension
-        )
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-        request.setTitle(title)
-        Toast.makeText(this, "start Downloading..", Toast.LENGTH_SHORT).show()
-
-        downloadReference = downloadManager?.enqueue(request) ?: 0
-
-        // TODO: check if this is correct place to call snackbar function
+    private fun startFileDownload(download: Download) {
+//        val extension = url?.substring(url.lastIndexOf("."))
+//        val downloadReference: Long
+//        val downloadManager: DownloadManager = this.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+//        val uri = Uri.parse(url)
+//        val request = DownloadManager.Request(uri)
+//
+//        request.setDestinationInExternalPublicDir(
+//            "/", // TODO: not sure about this param
+//            "srt" + System.currentTimeMillis() + extension
+//        )
+//            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+//            .setTitle(title)
+//
+//        Toast.makeText(this, "start Downloading..", Toast.LENGTH_SHORT).show()
+//
+//        downloadReference = downloadManager.enqueue(request) ?: 0
+//
+//        // TODO: check if this is correct place to call snackbar function
         val parentLayout = findViewById<View>(android.R.id.content)
-        showSnackbarDownloaded("spiderman.srt", "Spiderman 3", parentLayout)
+        showSnackbarDownloaded(download, parentLayout)
 
-        return downloadReference
+        // Insert download into db
+        downloadViewModel.insertDownload(download)
     }
 
     // Setting up action bar with back arrow
@@ -152,7 +156,10 @@ class SubtitlesActivity : AppCompatActivity() {
 
     // Snackbar function to display snackbar telling user which file of what movie was downloaded
     //TODO: value of download parameters are from db instead of recyclerview (FIX THIS)
-    private fun showSnackbarDownloaded(fileName: String, movieTitle: String, view: View) {
+    private fun showSnackbarDownloaded(download : Download, view: View) {
+        val fileName = download.attributes.files[0].fileName
+        val movieTitle = download.attributes.featureDetails.movieTitle
+
         // Initialize snackbar message
         val snackBar = Snackbar.make(
             view, "Downloaded $fileName ($movieTitle)",

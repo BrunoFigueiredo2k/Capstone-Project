@@ -7,7 +7,6 @@ import com.example.capstone_project.dao.DownloadDao
 import com.example.capstone_project.database.DownloadsRoomDatabase
 import com.example.capstone_project.model.Download
 
-
 class DownloadRepository(context: Context) {
     private var downloadDao: DownloadDao
 

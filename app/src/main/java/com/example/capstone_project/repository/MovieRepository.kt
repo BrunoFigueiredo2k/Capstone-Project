@@ -65,12 +65,15 @@ class MovieRepository {
     val genre: LiveData<ArrayList<Genre>>
         get() = _genres
 
+    // TODO: returns null
     suspend fun getGenreNames(){
         try {
             //timeout the request after 5 seconds
             val result : ResultSetWithGenres = withTimeout(5_000) {
                 movieApiService.getGenreNames()
             }
+
+            Log.d("genres", result.genres.toString())
 
             _genres.value = result.genres
         } catch (error: Throwable) {

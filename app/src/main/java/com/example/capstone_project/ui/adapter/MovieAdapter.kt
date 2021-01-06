@@ -42,8 +42,8 @@ class MovieAdapter(private val movies: List<Movie>, private val onClick: (Movie)
         fun databind(movie: Movie) {
             itemView.tvMovieTitle.text = movie.title
             itemView.tvMovieReleaseYear.text = movie.releaseYear
-            // TODO: call convertGenreIdsToName(movie.genreIds) on assignment
-            itemView.tvMovieGenre.text = convertGenreIdsToName(movie.genreIds)
+            // TODO: call convertGenreIdsToNames(movie.genreIds) on assignment
+            itemView.tvMovieGenre.text = movie.genreIds.toString()
             itemView.tvMovieRating.text = movie.rating.toString()
 
             Glide.with(context).load(movie.getImageUrl()).into(itemView.ivMoviePoster)
@@ -52,7 +52,7 @@ class MovieAdapter(private val movies: List<Movie>, private val onClick: (Movie)
 
     // TODO: fix this function
     // Converts genre ids array passed to the corresponding genre names from TMDB
-    fun convertGenreIdsToName(ids : ArrayList<Int>) : String {
+    fun convertGenreIdsToNames(ids : ArrayList<Int>) : String {
         val genresIds = arrayListOf<Int>() // TODO: get viewmodel data from MovieApiService
         val genreNames = arrayListOf<String>() // TODO: get viewmodel data from MovieApiService
         var returnGenreNames = ""
@@ -62,7 +62,7 @@ class MovieAdapter(private val movies: List<Movie>, private val onClick: (Movie)
             // Loop through all genreIds in response from api and check if it equals the passed id index
             for (j in genreNames.indices){
                 // If passed id index is equal to genre id in object
-                if (ids[j] == genresIds[j]){
+                if (ids[i] == genresIds[j]){
                     // Add the genre to the empty return string with a comma if it's not the last one
                     if (j == (genreNames.size - 1)){
                         returnGenreNames += genreNames[j]
@@ -73,7 +73,7 @@ class MovieAdapter(private val movies: List<Movie>, private val onClick: (Movie)
             }
         }
 
-        Log.d("genreNames", genreNames.toString())
+        Log.d("genreNames", returnGenreNames)
 
         // TODO: return concatenated genres here
         return returnGenreNames

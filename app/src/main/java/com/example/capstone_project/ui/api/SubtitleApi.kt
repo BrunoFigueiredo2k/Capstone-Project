@@ -19,14 +19,14 @@ class SubtitleApi {
                 .build()
 
             // Create the Retrofit instance
-            val movieApi = Retrofit.Builder()
+            val subtitleApi = Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
 
             // Return the Retrofit TriviaApiService
-            return movieApi.create(SubtitlesApiService::class.java)
+            return subtitleApi.create(SubtitlesApiService::class.java)
         }
     }
 }
