@@ -22,9 +22,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="0.6"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:paddingStart="20dp"
+            android:paddingEnd="10dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
 
             <TextView
                 android:id="@+id/tvMovieTitle"
@@ -51,7 +54,7 @@
                 android:text="TextView"
                 android:textSize="14sp" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
@@ -60,7 +63,8 @@
                     android:id="@+id/ivStar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.1"
+                    android:layout_marginEnd="0dp"
+                    android:layout_toStartOf="@+id/tvMovieRating"
                     android:textAlignment="viewEnd"
                     card_view:srcCompat="@drawable/ic_baseline_star_24" />
 
@@ -68,12 +72,13 @@
                     android:id="@+id/tvMovieRating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textSize="18dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="10dp"
                     android:text="TextView"
                     android:textAlignment="viewStart"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
-            </LinearLayout>
+            </RelativeLayout>
 
 
         </LinearLayout>

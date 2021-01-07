@@ -11,13 +11,15 @@ import android.widget.Toast.LENGTH_LONG
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.capstone_project.R
+import com.example.capstone_project.interfaces.GetJson
 import com.example.capstone_project.model.Attributes
 import com.example.capstone_project.model.Download
 import kotlinx.android.synthetic.main.item_downloaded.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class DownloadsAdapter(private val downloads: List<Download>) : RecyclerView.Adapter<DownloadsAdapter.ViewHolder>() {
+class DownloadsAdapter(private val downloads: List<Download>) : RecyclerView.Adapter<DownloadsAdapter.ViewHolder>(),
+    GetJson {
     private lateinit var context: Context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -39,21 +41,9 @@ class DownloadsAdapter(private val downloads: List<Download>) : RecyclerView.Ada
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         @SuppressLint("SetTextI18n")
         fun databind(download: Download) {
-            Log.d("language", download.attributes.language)
-//            Log.d("attributes", download.attributes.javaClass.name)
-//            Log.d("attributes", download.attributes.toString())
-//            Log.d("filename", download.attributes.files[0].fileName)
-//            Log.d("filename", download.attributes.files[0].fileName.javaClass.name)
-            Log.d("object", download.toString())
-            Log.d("object", download.attributes.toString())
-
-//            Log.d("attributes", download.attributes.relatedLinks.posterImgUrl)
-//            Log.d("attributes", download.attributes.featureDetails.movieTitle)
-//            Log.d("attributes", printYearMonthDayFormat(download.downloadDate))
-
             Glide.with(context).load(download.attributes.relatedLinks.posterImgUrl).into(itemView.ivMoviePoster)
             itemView.tvMovieTitle.text = download.attributes.featureDetails.movieTitle
-            itemView.tvMovieLanguage.text = download.attributes.language
+            itemView.tvMovieLanguage.text = getLanguageNameJson(download.attributes.language, context)
             itemView.tvMovieFile.text = download.attributes.files[0].fileName
             itemView.tvDownloadDate.text = "downloaded: " + printYearMonthDayFormat(download.downloadDate)
         }

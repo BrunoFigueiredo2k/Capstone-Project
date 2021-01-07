@@ -53,31 +53,11 @@ class SubtitlesAdapter(private val downloads: List<Download>, private val onClic
                 // done to convert to language value that's returned from the api to the corresponding country
                 Glide.with(context).load(getCountryFlag(convertLanguageToCountryCode(download.attributes.language))).into(itemView.ivMoviePoster)
                 // Gets the language name instead of code and sets it to the textview
-                itemView.tvMovieLanguage.text = getLanguageNameJson(download.attributes.language)
+                itemView.tvMovieLanguage.text = getLanguageNameJson(download.attributes.language, context)
 
                 itemView.tvMovieFile.text = download.attributes.files[0].fileName
             }
         }
-    }
-
-    val gson = Gson()
-
-    // Function to convert language code into language name from languages.json file in assets folder
-    private fun getLanguageNameJson(languageCode : String) : String {
-        val json = getJson("languages.json", context)
-
-        // Convert json string of file to Model (Languages)
-        val languages = gson.fromJson(json, Languages::class.java)
-
-        // Loop through all languages and whenever iteration language code matches the code passed
-        // from Download class then return the language name
-        var languageName = ""
-        for (i in languages.languages.indices){
-            if (languageCode == languages.languages[i].code){
-                languageName = languages.languages[i].name
-            }
-        }
-        return languageName
     }
 
     // Get country flag from flags api url
@@ -87,6 +67,7 @@ class SubtitlesAdapter(private val downloads: List<Download>, private val onClic
 
     // Determine the flag/country of the language that's returned from the api
     private fun convertLanguageToCountryCode(language : String) : String{
+        val gson = Gson()
         // Get countries from json file and convert from json to model
         val jsonCountries = getJson("countries.json", context)
         val countriesObj = gson.fromJson(jsonCountries, Countries::class.java)
