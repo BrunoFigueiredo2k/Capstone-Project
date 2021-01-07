@@ -95,44 +95,48 @@ class SubtitlesActivity : AppCompatActivity() {
     private fun downloadSubtitle(download: Download) {
         val movieTitle = download.attributes.featureDetails.movieTitle
         val fileName = download.attributes.files[0].fileName
-        var downloadId : Long = 0
+//        var downloadId : Long = 0
+//
+//        // Getting the download url from API
+//        val subtitlesApiService: SubtitlesApiService = SubtitleApi.createApi()
+//        val downloadUrl = suspend {
+//            subtitlesApiService.fetchDownloadUrl().downloadUrl
+//        }
+//
+//        Log.d("downloadUrl", downloadUrl.toString())
+//
+//        val request = DownloadManager.Request(
+//            //TODO: add download url here by calling fetchDownloadUrl()
+//            Uri.parse(downloadUrl.toString()))
+//            .setTitle(movieTitle)
+//            .setDescription("Downloading $fileName ($movieTitle)")
+//            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_ONLY_COMPLETION)
+//            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+//
+//        val dm = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+//        downloadId = dm.enqueue(request)
+//
+//        // Checks if download is complete
+//        val broadcast = object:BroadcastReceiver(){
+//            override fun onReceive(p0: Context?, p1: Intent?) {
+//                val id = p1?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
+//                // If the request id and downloadId set above are equal then file is downloaded
+//                if (id == downloadId) {
+//                    // Show message to user in Snackbar
+//                    val parentLayout = findViewById<View>(android.R.id.content)
+//                    showSnackbarDownloaded(fileName, movieTitle, parentLayout)
+//                    // Insert download into db
+//                    downloadViewModel.insertDownload(download)
+//                }
+//            }
+//        }
+//
+//        // When download manager action is completed then look through broadcast variable
+//        registerReceiver(broadcast, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
-        // Getting the download url from API
-        val subtitlesApiService: SubtitlesApiService = SubtitleApi.createApi()
-        val downloadUrl = suspend {
-            subtitlesApiService.fetchDownloadUrl().downloadUrl
-        }
-
-        Log.d("downloadUrl", downloadUrl.toString())
-
-        val request = DownloadManager.Request(
-            //TODO: add download url here by calling fetchDownloadUrl()
-            Uri.parse(downloadUrl.toString()))
-            .setTitle(movieTitle)
-            .setDescription("Downloading $fileName ($movieTitle)")
-            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_ONLY_COMPLETION)
-            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
-
-        val dm = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-        downloadId = dm.enqueue(request)
-
-        // Checks if download is complete
-        val broadcast = object:BroadcastReceiver(){
-            override fun onReceive(p0: Context?, p1: Intent?) {
-                val id = p1?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
-                // If the request id and downloadId set above are equal then file is downloaded
-                if (id == downloadId) {
-                    // Show message to user in Snackbar
-                    val parentLayout = findViewById<View>(android.R.id.content)
-                    showSnackbarDownloaded(fileName, movieTitle, parentLayout)
-                    // Insert download into db
-                    downloadViewModel.insertDownload(download)
-                }
-            }
-        }
-
-        // When download manager action is completed then look through broadcast variable
-        registerReceiver(broadcast, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+        downloadViewModel.insertDownload(download)
+        val parentLayout = findViewById<View>(android.R.id.content)
+        showSnackbarDownloaded(fileName, movieTitle, parentLayout)
     }
 
     // Setting up action bar with back arrow

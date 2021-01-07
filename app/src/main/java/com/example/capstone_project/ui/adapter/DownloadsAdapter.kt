@@ -6,15 +6,18 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import android.widget.Toast.LENGTH_LONG
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.capstone_project.R
+import com.example.capstone_project.model.Attributes
 import com.example.capstone_project.model.Download
 import kotlinx.android.synthetic.main.item_downloaded.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class DownloadsAdapter(private val games: List<Download>) : RecyclerView.Adapter<DownloadsAdapter.ViewHolder>() {
+class DownloadsAdapter(private val downloads: List<Download>) : RecyclerView.Adapter<DownloadsAdapter.ViewHolder>() {
     private lateinit var context: Context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -26,22 +29,27 @@ class DownloadsAdapter(private val games: List<Download>) : RecyclerView.Adapter
     }
 
     override fun getItemCount(): Int {
-        return games.size
+        return downloads.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int){
-        holder.databind(games[position])
+        holder.databind(downloads[position])
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         @SuppressLint("SetTextI18n")
         fun databind(download: Download) {
-            Log.d("downloadbind", download.attributes.relatedLinks.posterImgUrl)
-            Log.d("downloadbind", download.attributes.featureDetails.movieTitle)
-            Log.d("downloadbind", download.attributes.language)
-            Log.d("downloadbind", download.attributes.files[0].fileName)
-            Log.d("type", download.attributes.files[0].fileName.javaClass.name)
-            Log.d("downloadbind", printYearMonthDayFormat(download.downloadDate))
+            Log.d("language", download.attributes.language)
+//            Log.d("attributes", download.attributes.javaClass.name)
+//            Log.d("attributes", download.attributes.toString())
+//            Log.d("filename", download.attributes.files[0].fileName)
+//            Log.d("filename", download.attributes.files[0].fileName.javaClass.name)
+            Log.d("object", download.toString())
+            Log.d("object", download.attributes.toString())
+
+//            Log.d("attributes", download.attributes.relatedLinks.posterImgUrl)
+//            Log.d("attributes", download.attributes.featureDetails.movieTitle)
+//            Log.d("attributes", printYearMonthDayFormat(download.downloadDate))
 
             Glide.with(context).load(download.attributes.relatedLinks.posterImgUrl).into(itemView.ivMoviePoster)
             itemView.tvMovieTitle.text = download.attributes.featureDetails.movieTitle

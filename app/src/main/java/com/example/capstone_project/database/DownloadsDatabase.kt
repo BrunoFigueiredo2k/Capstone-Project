@@ -26,29 +26,11 @@ class Converters {
     }
 
     /** CONVERTER FOR ATTRIBUTES CLASS **/
-//    @TypeConverter
-//    fun fromAttributes(value : Attributes):String{
-//        return value.toString()
-//    }
-//
-//    @TypeConverter
-//    fun toAttributes(value:String) : Attributes{
-//        //TODO: DONT KNOW IF THIS WORKS!!
-//        Log.d("db_value", Attributes(value, FeatureDetails(value), arrayListOf(File(value)), RelatedLinks(value)).toString())
-//        Log.d("db_value", value)
-//        return Attributes(value, FeatureDetails(value), arrayListOf(File(value)), RelatedLinks(value))
-//    }
+    @TypeConverter
+    fun attributesToString(app: Attributes): String = Gson().toJson(app)
 
     @TypeConverter
-    fun fromAttributes(value: String): Attributes {
-        Log.d("val", value)
-        return value.let { Attributes(value, FeatureDetails(value), arrayListOf(File(value)) , RelatedLinks(value)) }
-    }
-
-    @TypeConverter
-    fun attributesToString(attributes: Attributes): String {
-        return attributes.toString()
-    }
+    fun stringToAttributes(string: String): Attributes = Gson().fromJson(string, Attributes::class.java)
 }
 
 @Database(entities = [Download::class], version = 1, exportSchema = false)
