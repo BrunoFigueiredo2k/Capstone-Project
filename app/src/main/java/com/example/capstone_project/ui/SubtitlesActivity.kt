@@ -1,7 +1,10 @@
 package com.example.capstone_project.ui
 
 import android.app.DownloadManager
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
@@ -18,12 +21,14 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.capstone_project.R
+import com.example.capstone_project.interfaces.SubtitlesApiService
 import com.example.capstone_project.model.Download
 import com.example.capstone_project.model.Movie
 import com.example.capstone_project.ui.ViewModel.DownloadViewModel
 import com.example.capstone_project.ui.ViewModel.MovieViewModel
 import com.example.capstone_project.ui.ViewModel.SubtitleViewModel
 import com.example.capstone_project.ui.adapter.SubtitlesAdapter
+import com.example.capstone_project.ui.api.SubtitleApi
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_subtitles.*
 import java.io.File
@@ -36,22 +41,8 @@ class SubtitlesActivity : AppCompatActivity() {
     private val downloads = arrayListOf<Download>()
     private val subtitlesAdapter =
         SubtitlesAdapter(downloads) { download ->
-            // TODO: download is null because this is the download from db instead of download from recyclerview list
-            Toast.makeText(this, "Clicked: ${download.id}", LENGTH_LONG).show()
-            Log.d("clickicon", "Clicked: $download")
-
-            // TODO: uncomment when function is fully working
-            onSubtitleDownloadClick(download)
+            downloadSubtitle(download)
         }
-
-//    private fun callClickListener(download: Download){
-//        subtitlesAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver(){
-//            override fun onChanged() {
-//                Toast.makeText(applicationContext, "Clicked: ${download.id}", LENGTH_LONG).show()
-//                Log.d("clickicon", "Clicked: $download")
-//            }
-//        })
-//    }
 
     // Observe livedata String for imdbId and pass as param to fetch subtitles based on this id
     private fun observeMovieImdbId() {
@@ -101,66 +92,60 @@ class SubtitlesActivity : AppCompatActivity() {
     }
 
     // Click listener for specific subtitle of movie
-    // TODO: Source: https://stackoverflow.com/questions/63099515/how-to-download-file-from-url-in-android
-    private fun onSubtitleDownloadClick(download: Download) {
-        // TODO: not sure if writing to this directory is a good idea (Ask Pim?)
-        // Directory that the download will be written to
-        val directory = File(Environment.DIRECTORY_DOWNLOADS)
+    private fun downloadSubtitle(download: Download) {
+        val movieTitle = download.attributes.featureDetails.movieTitle
+        val fileName = download.attributes.files[0].fileName
+        var downloadId : Long = 0
 
-        // Check if directory doesn't exist and if it doesn't create directory
-        if (!directory.exists()) {
-            directory.mkdirs()
+        // Getting the download url from API
+        val subtitlesApiService: SubtitlesApiService = SubtitleApi.createApi()
+        val downloadUrl = suspend {
+            subtitlesApiService.fetchDownloadUrl().downloadUrl
         }
 
-        // TODO: downloadmanager accepts the download url, need to figure out what this url is in endpoint
-        val downloadFileUrl = download.attributes.files[0].fileName
+        Log.d("downloadUrl", downloadUrl.toString())
 
-        // TODO: filename is null check subtitlesadapter error
-//        startFileDownload(downloadFileUrl[0].fileName, download)
-        startFileDownload(download)
-    }
+        val request = DownloadManager.Request(
+            //TODO: add download url here by calling fetchDownloadUrl()
+            Uri.parse(downloadUrl.toString()))
+            .setTitle(movieTitle)
+            .setDescription("Downloading $fileName ($movieTitle)")
+            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_ONLY_COMPLETION)
+            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
 
-    private fun startFileDownload(download: Download) {
-//        val extension = url?.substring(url.lastIndexOf("."))
-//        val downloadReference: Long
-//        val downloadManager: DownloadManager = this.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-//        val uri = Uri.parse(url)
-//        val request = DownloadManager.Request(uri)
-//
-//        request.setDestinationInExternalPublicDir(
-//            "/", // TODO: not sure about this param
-//            "srt" + System.currentTimeMillis() + extension
-//        )
-//            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-//            .setTitle(title)
-//
-//        Toast.makeText(this, "start Downloading..", Toast.LENGTH_SHORT).show()
-//
-//        downloadReference = downloadManager.enqueue(request) ?: 0
-//
-//        // TODO: check if this is correct place to call snackbar function
-        val parentLayout = findViewById<View>(android.R.id.content)
-        showSnackbarDownloaded(download, parentLayout)
+        val dm = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        downloadId = dm.enqueue(request)
 
-        // Insert download into db
-        downloadViewModel.insertDownload(download)
+        // Checks if download is complete
+        val broadcast = object:BroadcastReceiver(){
+            override fun onReceive(p0: Context?, p1: Intent?) {
+                val id = p1?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
+                // If the request id and downloadId set above are equal then file is downloaded
+                if (id == downloadId) {
+                    // Show message to user in Snackbar
+                    val parentLayout = findViewById<View>(android.R.id.content)
+                    showSnackbarDownloaded(fileName, movieTitle, parentLayout)
+                    // Insert download into db
+                    downloadViewModel.insertDownload(download)
+                }
+            }
+        }
+
+        // When download manager action is completed then look through broadcast variable
+        registerReceiver(broadcast, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
     }
 
     // Setting up action bar with back arrow
     private fun setUpActionBar() {
         supportActionBar?.apply {
-            // show back button on toolbar on back button press, it will navigate to movies activity
+            // show back button on toolbar on back button press, it will navigate to home activity
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
         }
     }
 
     // Snackbar function to display snackbar telling user which file of what movie was downloaded
-    //TODO: value of download parameters are from db instead of recyclerview (FIX THIS)
-    private fun showSnackbarDownloaded(download : Download, view: View) {
-        val fileName = download.attributes.files[0].fileName
-        val movieTitle = download.attributes.featureDetails.movieTitle
-
+    private fun showSnackbarDownloaded(fileName : String, movieTitle : String, view: View) {
         // Initialize snackbar message
         val snackBar = Snackbar.make(
             view, "Downloaded $fileName ($movieTitle)",

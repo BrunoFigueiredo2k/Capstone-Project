@@ -20,7 +20,6 @@ class DownloadRepository(context: Context) {
     }
 
     suspend fun insertDownload(download: Download) {
-        Log.d("date", download.downloadDate.toString())
         downloadDao.insertDownload(download)
     }
 }

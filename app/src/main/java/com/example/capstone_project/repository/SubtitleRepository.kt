@@ -29,8 +29,6 @@ class SubtitleRepository {
             }
 
             _downloads.value = result.downloads
-            Log.d("subtitleRepo", result.downloads.toString())
-            Log.d("subtitleRepo", result.toString())
         } catch (error: Throwable) {
             throw MovieRefreshError("Unable to refresh movies", error)
         }

@@ -46,15 +46,17 @@ class SubtitlesAdapter(private val downloads: List<Download>, private val onClic
         }
         @SuppressLint("SetTextI18n")
         fun databind(download: Download) {
-            // Pass flag that's been returned through the determineLanguage flag converter. This is
-            // done to convert to language value that's returned from the api to the corresponding country
-            Glide.with(context).load(getCountryFlag(convertLanguageToCountryCode(download.attributes.language))).into(itemView.ivMoviePoster)
 
-            // Gets the language name instead of code and sets it to the textview
-            itemView.tvMovieLanguage.text = getLanguageNameJson(download.attributes.language)
+            // Only bind entries of which the filename is not null
+            if (download.attributes.files[0].fileName != "null" || download.attributes.files[0].fileName.isNotBlank()){
+                // Pass flag that's been returned through the determineLanguage flag converter. This is
+                // done to convert to language value that's returned from the api to the corresponding country
+                Glide.with(context).load(getCountryFlag(convertLanguageToCountryCode(download.attributes.language))).into(itemView.ivMoviePoster)
+                // Gets the language name instead of code and sets it to the textview
+                itemView.tvMovieLanguage.text = getLanguageNameJson(download.attributes.language)
 
-            // TODO: fix setting the filename from the list. error: nullpointer
-//            itemView.tvMovieFile.text = download.files[0].fileName
+                itemView.tvMovieFile.text = download.attributes.files[0].fileName
+            }
         }
     }
 

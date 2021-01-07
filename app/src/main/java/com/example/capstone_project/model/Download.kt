@@ -52,3 +52,8 @@ data class File(
 data class RelatedLinks (
     @SerializedName("img_url") var posterImgUrl: String
 ) : Parcelable
+
+@Parcelize
+data class DownloadUrl (
+    @SerializedName("link") var downloadUrl: String
+) : Parcelable

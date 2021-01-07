@@ -1,6 +1,7 @@
 package com.example.capstone_project.database
 
 import android.content.Context
+import android.util.Log
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.capstone_project.dao.DownloadDao
@@ -9,6 +10,7 @@ import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.w3c.dom.Attr
 import java.util.*
 
 class Converters {
@@ -24,15 +26,28 @@ class Converters {
     }
 
     /** CONVERTER FOR ATTRIBUTES CLASS **/
+//    @TypeConverter
+//    fun fromAttributes(value : Attributes):String{
+//        return value.toString()
+//    }
+//
+//    @TypeConverter
+//    fun toAttributes(value:String) : Attributes{
+//        //TODO: DONT KNOW IF THIS WORKS!!
+//        Log.d("db_value", Attributes(value, FeatureDetails(value), arrayListOf(File(value)), RelatedLinks(value)).toString())
+//        Log.d("db_value", value)
+//        return Attributes(value, FeatureDetails(value), arrayListOf(File(value)), RelatedLinks(value))
+//    }
+
     @TypeConverter
-    fun fromAttributes(value : Attributes):String{
-        return value.toString()
+    fun fromAttributes(value: String): Attributes {
+        Log.d("val", value)
+        return value.let { Attributes(value, FeatureDetails(value), arrayListOf(File(value)) , RelatedLinks(value)) }
     }
 
     @TypeConverter
-    fun toAttributes(value:String) : Attributes{
-        //TODO: DONT KNOW IF THIS WORKS!!
-        return Attributes(value, FeatureDetails(value), arrayListOf(File(value)), RelatedLinks(value))
+    fun attributesToString(attributes: Attributes): String {
+        return attributes.toString()
     }
 }
 
