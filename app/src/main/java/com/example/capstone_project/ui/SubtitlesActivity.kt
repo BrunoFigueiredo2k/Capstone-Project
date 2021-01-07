@@ -1,53 +1,54 @@
 package com.example.capstone_project.ui
 
-import android.app.DownloadManager
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.graphics.Color
-import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
-import android.widget.Toast.LENGTH_LONG
+import android.widget.Toast.LENGTH_SHORT
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.capstone_project.R
-import com.example.capstone_project.interfaces.SubtitlesApiService
 import com.example.capstone_project.model.Download
 import com.example.capstone_project.model.Movie
 import com.example.capstone_project.ui.ViewModel.DownloadViewModel
 import com.example.capstone_project.ui.ViewModel.MovieViewModel
 import com.example.capstone_project.ui.ViewModel.SubtitleViewModel
 import com.example.capstone_project.ui.adapter.SubtitlesAdapter
-import com.example.capstone_project.ui.api.SubtitleApi
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_subtitles.*
-import java.io.File
-import java.util.*
 
 class SubtitlesActivity : AppCompatActivity() {
     private val subtitleViewModel: SubtitleViewModel by viewModels()
     private val downloadViewModel: DownloadViewModel by viewModels()
     private val movieViewModel: MovieViewModel by viewModels()
     private val downloads = arrayListOf<Download>()
+    private var databaseDownloads = listOf<Download>()
+
     private val subtitlesAdapter =
         SubtitlesAdapter(downloads) { download ->
-            downloadSubtitle(download)
+            // If subtitle not downloaded then start download
+            if (!subtitleDownloaded(download)){
+                downloadSubtitle(download)
+            } else {
+                Toast.makeText(this, R.string.dload_already_in_db, LENGTH_SHORT).show()
+            }
         }
 
     // Observe livedata String for imdbId and pass as param to fetch subtitles based on this id
     private fun observeMovieImdbId() {
         movieViewModel.movieId.observe(this, Observer { id ->
             fetchSubtitles(id)
+        })
+    }
+
+    private fun observeDatabaseDownloads(){
+        downloadViewModel.downloads.observe(this, Observer{downloads ->
+            databaseDownloads = databaseDownloads + downloads
         })
     }
 
@@ -76,8 +77,13 @@ class SubtitlesActivity : AppCompatActivity() {
 
         initViews()
 
+        observeLiveData()
+    }
+
+    private fun observeLiveData(){
         observeMovieImdbId()
         observeSubtitles()
+        observeDatabaseDownloads()
     }
 
     // Fetch subtitles for passed movie based on imdb_id
@@ -134,9 +140,25 @@ class SubtitlesActivity : AppCompatActivity() {
 //        // When download manager action is completed then look through broadcast variable
 //        registerReceiver(broadcast, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
-        downloadViewModel.insertDownload(download)
         val parentLayout = findViewById<View>(android.R.id.content)
         showSnackbarDownloaded(fileName, movieTitle, parentLayout)
+
+        downloadViewModel.insertDownload(download) // TODO: remove after dloadmanager fixed
+    }
+
+    // Check if download already exists in the db based on subtitle id
+    private fun subtitleDownloaded(download : Download) : Boolean{
+        var downloaded = false
+
+        // Loop through all downloads in db and if there is a dload with same id then return true
+        for (i in databaseDownloads.indices){
+            if (databaseDownloads[i].attributes.subtitleId == download.attributes.subtitleId) {
+                downloaded = true
+                break
+            }
+        }
+
+        return downloaded
     }
 
     // Setting up action bar with back arrow

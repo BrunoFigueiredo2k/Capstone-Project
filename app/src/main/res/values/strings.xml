@@ -16,5 +16,6 @@
     <string name="current_state_display">currently displaying: Popular movies</string>
     <string name="no_downloads">No downloads.. You haven\'t downloaded any subtitles yet.</string>
     <string name="your_downloads">Your downloaded subtitles:</string>
+    <string name="dload_already_in_db">Your downloaded subtitles:</string>
     <string name="instruction_subtitles">Click on download icon on the right side to download the subtitle for this movie.</string>
 </resources>

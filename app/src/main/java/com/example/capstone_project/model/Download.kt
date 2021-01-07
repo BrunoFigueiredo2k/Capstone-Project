@@ -26,16 +26,11 @@ data class Download(
 
 @Parcelize
 data class Attributes (
+    @SerializedName("subtitle_id") var subtitleId: String,
     @SerializedName("language") var language: String,
-
-    @SerializedName("feature_details")
-    var featureDetails: FeatureDetails,
-
-    @SerializedName("files")
-    var files: List<File>,
-
-    @SerializedName("related_links")
-    var relatedLinks: RelatedLinks
+    @SerializedName("feature_details") var featureDetails: FeatureDetails,
+    @SerializedName("files") var files: List<File>,
+    @SerializedName("related_links") var relatedLinks: RelatedLinks
 ) : Parcelable
 
 @Parcelize

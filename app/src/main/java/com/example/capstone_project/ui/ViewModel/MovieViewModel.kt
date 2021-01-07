@@ -61,7 +61,7 @@ class MovieViewModel : ViewModel(){
     fun getGenreNames() {
         viewModelScope.launch {
             try {
-                movieRepository.getGenreNames()
+                val genres = movieRepository.getGenreNames()
             } catch (error: MovieRepository.MovieRefreshError) {
                 logError(error)
             }

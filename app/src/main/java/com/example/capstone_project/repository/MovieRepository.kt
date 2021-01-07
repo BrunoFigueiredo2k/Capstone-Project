@@ -73,8 +73,6 @@ class MovieRepository {
                 movieApiService.getGenreNames()
             }
 
-            Log.d("genres", result.genres.toString())
-
             _genres.value = result.genres
         } catch (error: Throwable) {
             throw MovieRefreshError("Unable to refresh movies", error)
