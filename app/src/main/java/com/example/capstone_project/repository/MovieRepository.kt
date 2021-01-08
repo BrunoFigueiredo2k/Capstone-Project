@@ -56,7 +56,7 @@ class MovieRepository {
 
             _movieId.value = result.imdbId
         } catch (error: Throwable) {
-            throw MovieRefreshError("Unable to refresh movies", error)
+            throw MovieRefreshError("Unable to refresh movie imdb", error)
         }
     }
 
@@ -75,7 +75,7 @@ class MovieRepository {
 
             _genres.value = result.genres
         } catch (error: Throwable) {
-            throw MovieRefreshError("Unable to refresh movies", error)
+            throw MovieRefreshError("Unable to refresh genre names", error)
         }
     }
 

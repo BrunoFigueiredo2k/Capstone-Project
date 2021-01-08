@@ -1,8 +1,15 @@
 package com.example.capstone_project.ui
 
+import android.app.DownloadManager
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
@@ -13,12 +20,14 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.capstone_project.R
+import com.example.capstone_project.interfaces.SubtitlesApiService
 import com.example.capstone_project.model.Download
 import com.example.capstone_project.model.Movie
 import com.example.capstone_project.ui.ViewModel.DownloadViewModel
 import com.example.capstone_project.ui.ViewModel.MovieViewModel
 import com.example.capstone_project.ui.ViewModel.SubtitleViewModel
 import com.example.capstone_project.ui.adapter.SubtitlesAdapter
+import com.example.capstone_project.ui.api.SubtitleApi
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_subtitles.*
 
@@ -35,6 +44,7 @@ class SubtitlesActivity : AppCompatActivity() {
             if (!subtitleDownloaded(download)){
                 downloadSubtitle(download)
             } else {
+                // TODO: toast not showing
                 Toast.makeText(this, R.string.dload_already_in_db, LENGTH_SHORT).show()
             }
         }
@@ -101,49 +111,47 @@ class SubtitlesActivity : AppCompatActivity() {
     private fun downloadSubtitle(download: Download) {
         val movieTitle = download.attributes.featureDetails.movieTitle
         val fileName = download.attributes.files[0].fileName
-//        var downloadId : Long = 0
+        var downloadId : Long = 0
+
+        // Getting the download url from API
+        // TODO: something is wrong with fetching from api
+//        subtitleViewModel.fetchDownloadUrl(download.attributes.files[0].fileId)
 //
-//        // Getting the download url from API
-//        val subtitlesApiService: SubtitlesApiService = SubtitleApi.createApi()
-//        val downloadUrl = suspend {
-//            subtitlesApiService.fetchDownloadUrl().downloadUrl
-//        }
-//
-//        Log.d("downloadUrl", downloadUrl.toString())
-//
-//        val request = DownloadManager.Request(
-//            //TODO: add download url here by calling fetchDownloadUrl()
-//            Uri.parse(downloadUrl.toString()))
-//            .setTitle(movieTitle)
-//            .setDescription("Downloading $fileName ($movieTitle)")
-//            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_ONLY_COMPLETION)
-//            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
-//
-//        val dm = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-//        downloadId = dm.enqueue(request)
-//
-//        // Checks if download is complete
-//        val broadcast = object:BroadcastReceiver(){
-//            override fun onReceive(p0: Context?, p1: Intent?) {
-//                val id = p1?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
-//                // If the request id and downloadId set above are equal then file is downloaded
-//                if (id == downloadId) {
-//                    // Show message to user in Snackbar
-//                    val parentLayout = findViewById<View>(android.R.id.content)
-//                    showSnackbarDownloaded(fileName, movieTitle, parentLayout)
-//                    // Insert download into db
-//                    downloadViewModel.insertDownload(download)
-//                }
-//            }
-//        }
-//
-//        // When download manager action is completed then look through broadcast variable
-//        registerReceiver(broadcast, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+//        subtitleViewModel.downloadUrl.observe(this, Observer { url ->
+//           println(url)
+//            Log.d("dloadUrl", url)
+//        })
+
+        val request = DownloadManager.Request(
+            Uri.parse("https://www.brightful.me/content/images/2020/07/david-kovalenko-G85VuTpw6jg-unsplash.jpg")) // TEST IMG JUST IN CASE: "https://www.brightful.me/content/images/2020/07/david-kovalenko-G85VuTpw6jg-unsplash.jpg"
+            .setTitle(movieTitle)
+            .setDescription("Downloading $fileName ($movieTitle)")
+            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_ONLY_COMPLETION)
+            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+
+        val dm = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        downloadId = dm.enqueue(request)
+
+        // Checks if download is complete
+        val broadcast = object: BroadcastReceiver(){
+            override fun onReceive(p0: Context?, p1: Intent?) {
+                val id = p1?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
+                // If the request id and downloadId set above are equal then file is downloaded
+                if (id == downloadId) {
+                    // Show message to user in Snackbar
+                    val parentLayout = findViewById<View>(android.R.id.content)
+                    showSnackbarDownloaded(fileName, movieTitle, parentLayout)
+                    // Insert download into db
+                    downloadViewModel.insertDownload(download)
+                }
+            }
+        }
+
+        // When download manager action is completed then look through broadcast variable
+        registerReceiver(broadcast, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
         val parentLayout = findViewById<View>(android.R.id.content)
         showSnackbarDownloaded(fileName, movieTitle, parentLayout)
-
-        downloadViewModel.insertDownload(download) // TODO: remove after dloadmanager fixed
     }
 
     // Check if download already exists in the db based on subtitle id

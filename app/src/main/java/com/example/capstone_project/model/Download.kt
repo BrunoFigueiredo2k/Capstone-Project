@@ -6,7 +6,6 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
-import kotlinx.android.parcel.RawValue
 import java.util.*
 
 @Parcelize
@@ -40,6 +39,7 @@ data class FeatureDetails (
 
 @Parcelize
 data class File(
+    @SerializedName("file_id") var fileId: Long,
     @SerializedName("file_name") var fileName: String
 ) : Parcelable
 

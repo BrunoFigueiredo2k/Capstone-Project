@@ -46,7 +46,6 @@ class SubtitlesAdapter(private val downloads: List<Download>, private val onClic
         }
         @SuppressLint("SetTextI18n")
         fun databind(download: Download) {
-
             // Only bind entries of which the filename is not null
             if (download.attributes.files[0].fileName != "null" || download.attributes.files[0].fileName.isNotBlank()){
                 // Pass flag that's been returned through the determineLanguage flag converter. This is

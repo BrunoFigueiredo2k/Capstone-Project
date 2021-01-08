@@ -13,6 +13,7 @@ class SubtitleViewModel : ViewModel() {
     private val subtitleRepository = SubtitleRepository()
 
     val downloads = subtitleRepository.download
+    val downloadUrl = subtitleRepository.url
 
     private val _errorText: MutableLiveData<String> = MutableLiveData()
 
@@ -24,6 +25,16 @@ class SubtitleViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 subtitleRepository.getSubtitlesForMovie(imdbId)
+            } catch (error: MovieRepository.MovieRefreshError) {
+                logError(error)
+            }
+        }
+    }
+
+    fun fetchDownloadUrl(fileId : Long) {
+        viewModelScope.launch {
+            try {
+                subtitleRepository.getDownloadUrl(fileId)
             } catch (error: MovieRepository.MovieRefreshError) {
                 logError(error)
             }

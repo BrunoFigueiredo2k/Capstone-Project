@@ -12,13 +12,14 @@ interface SubtitlesApiService {
         @Query("imdb_id") imdbId : String
     ): ResultSetWithDownloads
 
-    // TODO: fix this
+    // TODO: retrofit2.HttpException: HTTP 406
     // Get subtitle file download url
     @Headers(
-        "Content-Type: application/json",
-        "Authorization: ",
+        "Content-Type: multipart/form-data",
         "Api-Key: 7aIwmzOfqInNK9mYkPW7KTQ0lH7LdCTx"
     )
     @POST("/api/v1/download")
-    suspend fun fetchDownloadUrl() : DownloadUrl
+    suspend fun fetchDownloadUrl(
+        @Query("file_id") fileId : Long
+    ) : DownloadUrl
 }
